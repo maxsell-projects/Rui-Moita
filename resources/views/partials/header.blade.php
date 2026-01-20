@@ -10,14 +10,12 @@
     <div class="container mx-auto px-6">
         <div class="flex items-center justify-between">
             
-            {{-- 1. LOGO (INTELLECTUS / RUI MOITA) --}}
-            <a href="{{ route('home') }}" class="relative z-50 group flex flex-col items-start leading-none" @click="mobileMenuOpen = false">
-                <span class="font-serif text-2xl md:text-3xl text-white tracking-wide group-hover:text-brand-accent transition-colors duration-500">
-                    INTELLECTUS
-                </span>
-                <span class="text-[8px] uppercase tracking-[0.3em] text-brand-accent group-hover:text-white transition-colors pl-0.5">
-                    Rui Moita Private Office
-                </span>
+            {{-- 1. LOGO (IMAGEM ATIVO_8.PNG) --}}
+            <a href="{{ route('home') }}" class="relative z-50 group block" @click="mobileMenuOpen = false">
+                {{-- Ajuste a altura (h-10/h-14) conforme a proporção real da sua imagem --}}
+                <img src="{{ asset('img/Ativo_8.png') }}" 
+                     alt="Intellectus | Rui Moita Private Office" 
+                     class="h-10 md:h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
             </a>
 
             {{-- 2. DESKTOP MENU (Hidden on Mobile) --}}
