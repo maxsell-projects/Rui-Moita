@@ -1,0 +1,62 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+[x-cloak] { display: none !important; }
+
+@theme {
+    /* 🔠 Tipografia */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Playfair Display', serif;
+
+    /* 🎨 PALETA INTELLECTUS (Configuração "Blue Dominant") */
+    
+    /* 1. BRAND PRIMARY: Azul Profundo (#1B2A41) */
+    /* Usado em: Botões principais, Títulos fortes, Links ativos */
+    /* Substitui o antigo Dourado/Bordeaux */
+    --color-brand-primary: #1B2A41;
+
+    /* 2. BRAND SECONDARY: Azul Meia-Noite / Preto (#0A0F14) */
+    /* Usado em: Fundos de secções escuras, Rodapés, Texto corrido forte */
+    --color-brand-secondary: #0A0F14;
+
+    /* 3. BRAND ACCENT: Dourado (#C5A059) */
+    /* Usado em: APENAS detalhes (linhas finas, hover states, ícones pequenos) */
+    --color-brand-accent: #C5A059;
+
+    /* 4. BRAND SURFACE: Off-white (#F5F5F2) */
+    /* Usado em: Fundos gerais, áreas de leitura */
+    /* Mapeado para 'brand-sand' e 'brand-background' para compatibilidade */
+    --color-brand-sand: #F5F5F2;
+    --color-brand-background: #F5F5F2;
+    
+    /* 5. TEXTO */
+    --color-brand-text: #1B2A41;      /* Azul para texto padrão (mais elegante que preto puro) */
+    --color-brand-text-light: #6B7280; /* Cinza para descrições */
+
+    /* 🔄 COMPATIBILIDADE COM O SEU HTML EXISTENTE */
+    /* Se tiveres classes antigas no HTML, isto garante que elas assumem a nova identidade */
+    --color-intellectus-base: var(--color-brand-secondary);
+    --color-intellectus-primary: var(--color-brand-primary);
+    --color-intellectus-accent: var(--color-brand-accent);
+}
+
+@layer utilities {
+    .text-shadow { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+    
+    /* Utilitário para texto Dourado (Use 'text-gold' no HTML onde quiser o amarelo) */
+    .text-gold {
+        color: var(--color-brand-accent);
+    }
+    
+    /* Utilitário para Bordas Douradas */
+    .border-gold {
+        border-color: var(--color-brand-accent);
+    }
+
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+}
