@@ -5,7 +5,6 @@
 @section('content')
 
     {{-- 1. HERO: A AUTORIDADE SILENCIOSA --}}
-    {{-- Fundo Azul Profundo com detalhe Dourado Minimalista --}}
     <section class="relative min-h-screen flex items-center bg-intellectus-primary text-white overflow-hidden pt-20">
         
         {{-- Grid Decorativo (Subtil) --}}
@@ -14,8 +13,6 @@
         </div>
 
         <div class="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 h-full items-center">
-            
-            {{-- Texto Principal --}}
             <div class="lg:col-span-8 lg:col-start-2">
                 <p class="font-sans text-xs uppercase tracking-[0.4em] text-intellectus-accent mb-6 animate-fade-in-up">
                     Private Office & Strategy
@@ -74,7 +71,6 @@
     <section class="py-24 bg-white border-t border-gray-100">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-                
                 @foreach([
                     'Rigor Técnico' => 'Análise baseada em dados, não em tendências.',
                     'Blindagem' => 'Privacidade absoluta em cada etapa da transação.',
@@ -87,22 +83,18 @@
                     <p class="font-sans text-sm text-gray-500 leading-relaxed">{{ $desc }}</p>
                 </div>
                 @endforeach
-
             </div>
         </div>
     </section>
 
-    {{-- 4. O CONSULTOR (SOP Requirement: Foto Visível) --}}
+    {{-- 4. O CONSULTOR (Líder) --}}
     <section class="py-24 bg-intellectus-base text-white relative overflow-hidden">
         <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            
-            {{-- Foto Estilo Editorial P&B --}}
+            {{-- Foto --}}
             <div class="relative order-2 lg:order-1">
                 <div class="aspect-[3/4] bg-gray-800 grayscale relative overflow-hidden border border-white/10">
-                    {{-- Substituir por foto real do consultor --}}
                     <img src="{{ asset('img/1.jpeg') }}" alt="Consultor Senior" class="object-cover w-full h-full hover:scale-105 transition-transform duration-1000 opacity-80 hover:opacity-100">
                 </div>
-                {{-- Selo de Autoridade --}}
                 <div class="absolute -bottom-6 -right-6 bg-intellectus-accent text-intellectus-base p-6 w-48">
                     <p class="font-serif italic text-lg leading-tight">"Onde há patrimônio, deve haver método."</p>
                 </div>
@@ -117,24 +109,35 @@
                 </p>
                 
                 <ul class="space-y-4 font-sans text-sm text-gray-300 mb-12">
-                    <li class="flex items-center gap-4">
-                        <span class="w-8 h-px bg-intellectus-accent"></span> Especialista em Investimento
-                    </li>
-                    <li class="flex items-center gap-4">
-                        <span class="w-8 h-px bg-intellectus-accent"></span> Consultoria Jurídica Imobiliária
-                    </li>
-                    <li class="flex items-center gap-4">
-                        <span class="w-8 h-px bg-intellectus-accent"></span> Gestão de Portfólio Familiar
-                    </li>
+                    <li class="flex items-center gap-4"><span class="w-8 h-px bg-intellectus-accent"></span> Especialista em Investimento</li>
+                    <li class="flex items-center gap-4"><span class="w-8 h-px bg-intellectus-accent"></span> Consultoria Jurídica Imobiliária</li>
+                    <li class="flex items-center gap-4"><span class="w-8 h-px bg-intellectus-accent"></span> Gestão de Portfólio Familiar</li>
                 </ul>
 
-                {{-- Assinatura Visual --}}
                 <p class="font-serif text-2xl italic text-intellectus-accent">Marco Moura</p>
             </div>
         </div>
     </section>
 
-    {{-- 5. ATUAÇÃO / SOLUÇÕES (Cards Grandes) --}}
+    {{-- [NOVA DOBRA 1] EQUIPA / INTELLIGENCE COLLECTIVE --}}
+    <section class="py-24 bg-white border-b border-gray-100">
+        <div class="container mx-auto px-6 text-center max-w-4xl">
+            <span class="text-xs font-bold uppercase tracking-[0.2em] text-intellectus-muted mb-4 block">A Nossa Estrutura</span>
+            <h2 class="font-serif text-3xl md:text-4xl text-intellectus-primary mb-8">Intelligence Collective</h2>
+            <p class="font-sans text-gray-500 font-light leading-relaxed mb-10">
+                A gestão patrimonial de excelência não é um ato solitário. 
+                Apoiamos os nossos clientes com uma equipa multidisciplinar que integra especialistas em investimento, 
+                direito e finanças, garantindo uma visão 360º sobre cada ativo.
+            </p>
+            
+            <a href="{{ route('team') }}" class="group inline-flex items-center gap-3 px-8 py-4 border border-intellectus-primary text-intellectus-primary font-bold uppercase tracking-widest text-xs hover:bg-intellectus-primary hover:text-white transition-all duration-300">
+                Conhecer a Equipa
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+        </div>
+    </section>
+
+    {{-- 5. ATUAÇÃO / SOLUÇÕES --}}
     <section id="atuacao" class="py-24 bg-intellectus-surface">
         <div class="container mx-auto px-6">
             <div class="mb-16">
@@ -166,13 +169,38 @@
         </div>
     </section>
 
-    {{-- 6. RESPALDO (SOP Requirement: Testemunhos) --}}
+    {{-- [NOVA DOBRA 2] RECRUTAMENTO --}}
+    <section class="py-0 bg-intellectus-base text-white">
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+            <div class="relative h-96 lg:h-auto min-h-[400px] overflow-hidden group">
+                {{-- Imagem de Fundo (Ex: Arquitetura ou Escritório) --}}
+                <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop" 
+                     class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000">
+                <div class="absolute inset-0 bg-gradient-to-r from-intellectus-base/90 to-transparent"></div>
+            </div>
+            
+            <div class="p-16 lg:p-24 flex flex-col justify-center">
+                <span class="text-intellectus-accent uppercase tracking-widest text-xs font-bold mb-4">Carreiras & Expansão</span>
+                <h2 class="font-serif text-3xl lg:text-4xl mb-6 leading-tight">Junte-se ao Private Office.</h2>
+                <p class="text-gray-400 font-light leading-relaxed mb-8">
+                    Se procura elevar o nível da sua carreira no imobiliário de luxo, com acesso a formação de elite, 
+                    ferramentas exclusivas e comissões acima da média, o seu lugar é na Intellectus.
+                </p>
+                <div>
+                    <a href="{{ route('recruitment') }}" class="inline-block px-8 py-4 bg-intellectus-accent text-intellectus-base font-bold uppercase tracking-widest text-xs hover:bg-white transition-all duration-300 shadow-lg">
+                        Candidatura Espontânea
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- 6. RESPALDO (Testemunhos) --}}
     <section class="py-24 bg-white border-b border-gray-100">
         <div class="container mx-auto px-6">
             <h2 class="font-serif text-3xl text-center mb-16 text-intellectus-primary">A confiança de quem decide.</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                {{-- Testimonial 1 --}}
                 <div class="text-center px-4">
                     <div class="text-intellectus-accent text-4xl font-serif mb-4">“</div>
                     <p class="font-serif text-lg text-gray-600 italic mb-6">
@@ -181,7 +209,6 @@
                     <p class="text-xs font-bold uppercase tracking-widest text-gray-400">Dr. Ricardo S., Investidor</p>
                 </div>
 
-                {{-- Testimonial 2 --}}
                 <div class="text-center px-4 border-l border-r border-gray-100">
                     <div class="text-intellectus-accent text-4xl font-serif mb-4">“</div>
                     <p class="font-serif text-lg text-gray-600 italic mb-6">
@@ -190,7 +217,6 @@
                     <p class="text-xs font-bold uppercase tracking-widest text-gray-400">Ana P., CEO</p>
                 </div>
 
-                {{-- Testimonial 3 --}}
                 <div class="text-center px-4">
                     <div class="text-intellectus-accent text-4xl font-serif mb-4">“</div>
                     <p class="font-serif text-lg text-gray-600 italic mb-6">
@@ -202,15 +228,11 @@
         </div>
     </section>
 
-    {{-- 7. FORMULÁRIO / CTA FINAL (SOP COMPLIANCE TOTAL) --}}
+    {{-- 7. FORMULÁRIO / CTA FINAL --}}
     <section id="analise-estrategica" class="py-24 bg-intellectus-primary relative">
-        {{-- Background Texture --}}
-        <div class="absolute inset-0 opacity-5" style="background-image: url('data:image/svg+xml,...');"></div>
-
         <div class="container mx-auto px-6 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
                 
-                {{-- Texto Lateral --}}
                 <div class="lg:col-span-4 text-white">
                     <h2 class="font-serif text-4xl mb-6">Solicitar Análise Estratégica</h2>
                     <p class="text-gray-400 font-light mb-8 text-justify">
@@ -219,7 +241,6 @@
                     </p>
                     <div class="h-px w-12 bg-intellectus-accent mb-8"></div>
                     
-                    {{-- SOP Contacts Info (Obrigatório Visualização) --}}
                     <div class="text-sm text-gray-500 space-y-2 font-mono">
                         <p>PRIVATE OFFICE</p>
                         <p class="text-gray-300">Lisboa • Porto • Algarve</p>
@@ -228,36 +249,30 @@
                     </div>
                 </div>
 
-                {{-- O FORMULÁRIO RIGOROSO (SOP) --}}
                 <div class="lg:col-span-8 bg-white p-10 lg:p-16 shadow-2xl rounded-sm">
                     <form action="{{ route('contact.send') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         @csrf
                         
-                        {{-- SOP 3.5: Nome e Nome Completo --}}
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">Nome Completo *</label>
                             <input type="text" name="name" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="Seu nome">
                         </div>
 
-                        {{-- SOP 3.5: Email e Email Completo --}}
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">Email Corporativo/Pessoal *</label>
                             <input type="email" name="email" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="email@exemplo.com">
                         </div>
 
-                        {{-- SOP 3.5: Telefone --}}
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">Telefone *</label>
                             <input type="tel" name="phone" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="+351 ...">
                         </div>
 
-                        {{-- SOP 3.5: Localização do imóvel --}}
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">Localização de Interesse *</label>
                             <input type="text" name="location" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="Ex: Cascais, Estoril...">
                         </div>
 
-                        {{-- SOP 3.5: Objetivo (Radio/Select) --}}
                         <div class="col-span-2">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-4">Objetivo da Operação *</label>
                             <div class="flex flex-wrap gap-4">
@@ -280,7 +295,6 @@
                             </div>
                         </div>
 
-                        {{-- SOP 3.5: Tipologia --}}
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Tipologia</label>
                             <select name="typology" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
@@ -292,7 +306,6 @@
                             </select>
                         </div>
 
-                        {{-- SOP 3.5: Prazos --}}
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">Prazo Pretendido</label>
                             <select name="timeline" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
@@ -303,7 +316,6 @@
                             </select>
                         </div>
 
-                        {{-- SOP 3.5: Venda para Compra --}}
                         <div class="col-span-2">
                             <p class="block text-[10px] uppercase tracking-widest text-gray-400 mb-3">Necessita vender para comprar?</p>
                             <div class="flex gap-6">
@@ -318,7 +330,6 @@
                             </div>
                         </div>
 
-                        {{-- SOP 3.5: Checkbox Legal (Obrigatório) --}}
                         <div class="col-span-2 mt-4 pt-4 border-t border-gray-50">
                             <label class="flex items-start gap-3 cursor-pointer">
                                 <input type="checkbox" name="privacy_policy" required class="mt-1 text-intellectus-accent border-gray-300 rounded focus:ring-intellectus-accent">
@@ -329,7 +340,6 @@
                             </label>
                         </div>
 
-                        {{-- Submit --}}
                         <div class="col-span-2 mt-2">
                             <button type="submit" class="w-full bg-intellectus-base text-white py-5 font-bold uppercase tracking-widest text-xs hover:bg-intellectus-primary transition-all duration-300 shadow-lg hover:shadow-xl">
                                 Enviar Pedido de Análise

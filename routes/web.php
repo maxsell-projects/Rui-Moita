@@ -7,7 +7,10 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Api\ChatbotController;
-use App\Http\Controllers\RecruitmentController; 
+use App\Http\Controllers\RecruitmentController;
+// Novos Controllers
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\AdminConsultantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +35,9 @@ Route::get('/sobre', function () {
     return view('about');
 })->name('about');
 
+// [NOVO] Rota para a Página da Equipa
+Route::get('/equipa', [PageController::class, 'team'])->name('team');
+
 
 // --- CONTACTOS (Landing Page de Conversão) ---
 
@@ -41,6 +47,15 @@ Route::get('/contactos', function () {
 
 // Processamento do Formulário (SOP Compliance)
 Route::post('/contactos/enviar', [ContactController::class, 'send'])->name('contact.send');
+
+
+// --- RECRUTAMENTO (Carreiras) ---
+
+// [NOVO] Rota para a Página de Trabalhe Connosco
+Route::get('/recrutamento', [PageController::class, 'recruitment'])->name('recruitment');
+
+// Processamento do Candidatura (Já existia)
+Route::post('/recrutamento/enviar', [RecruitmentController::class, 'submit'])->name('recruitment.submit');
 
 
 // --- PORTFÓLIO (IMÓVEIS) ---
@@ -61,7 +76,6 @@ Route::get('/ferramentas/imt', function () {
 
 Route::get('/ferramentas/mais-valias', [ToolsController::class, 'showGainsSimulator'])->name('tools.gains');
 Route::post('/ferramentas/mais-valias/calcular', [ToolsController::class, 'calculateGains'])->name('tools.gains.calculate');
-Route::post('/recrutamento/enviar', [RecruitmentController::class, 'submit'])->name('recruitment.submit');
 
 
 // --- PÁGINAS LEGAIS ---
@@ -95,5 +109,8 @@ Route::prefix('admin')->group(function () {
         })->name('admin.dashboard');
 
         Route::resource('properties', PropertyController::class)->names('admin.properties');
+
+        // [NOVO] Gestão de Equipa (Consultores)
+        Route::resource('consultants', AdminConsultantController::class)->names('admin.consultants');
     });
 });

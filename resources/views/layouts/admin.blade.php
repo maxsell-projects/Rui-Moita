@@ -61,6 +61,15 @@
                     <span class="text-xs uppercase tracking-wider">Imóveis</span>
                 </a>
 
+                {{-- NOVA SECÇÃO: ORGANIZAÇÃO --}}
+                <p class="px-4 text-[10px] font-bold uppercase tracking-widest text-brand-accent/50 mb-2 mt-6">Organização</p>
+
+                <a href="{{ route('admin.consultants.index') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-sm transition-all duration-200 group {{ request()->routeIs('admin.consultants*') ? 'bg-brand-accent text-brand-secondary font-bold shadow-lg' : 'text-gray-400 hover:bg-white/5 hover:text-white' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <span class="text-xs uppercase tracking-wider">Equipa</span>
+                </a>
+
                 {{-- Link para o Site Público --}}
                 <div class="pt-6 mt-6 border-t border-white/10">
                     <a href="{{ route('home') }}" target="_blank" 
