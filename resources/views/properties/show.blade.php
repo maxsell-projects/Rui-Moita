@@ -212,6 +212,7 @@
                             {{ $property->price ? '€ ' . number_format($property->price, 0, ',', '.') : 'Sob Consulta' }}
                         </p>
 
+                        {{-- BOTÕES DE AÇÃO --}}
                         <div class="space-y-4">
                             <a href="{{ route('contact') }}" class="block w-full bg-brand-secondary text-white text-center py-4 text-xs font-bold uppercase tracking-widest hover:bg-brand-primary transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                                 Agendar Visita Privada
@@ -223,7 +224,16 @@
                                     $msg .= " (Ref: " . $property->reference_code . ")";
                                 }
                                 $encodedMsg = urlencode($msg);
-                                $whatsapp = $property->whatsapp_number ?? '351910000000'; 
+                                
+                                // Prioriza o WhatsApp do Consultor, senão usa o do Imóvel, senão o Geral
+                                $whatsapp = '351910000000';
+                                if($property->consultant && $property->consultant->whatsapp) {
+                                    $whatsapp = $property->consultant->whatsapp;
+                                } elseif ($property->whatsapp_number) {
+                                    $whatsapp = $property->whatsapp_number;
+                                }
+                                // Limpa caracteres não numéricos
+                                $whatsapp = preg_replace('/[^0-9]/', '', $whatsapp);
                             @endphp
 
                             <a href="https://wa.me/{{ $whatsapp }}?text={{ $encodedMsg }}" target="_blank" class="block w-full border border-[#25D366] text-[#25D366] text-center py-4 text-xs font-bold uppercase tracking-widest hover:bg-[#25D366] hover:text-white transition duration-300 flex items-center justify-center gap-2 group">
@@ -243,14 +253,42 @@
                     </div>
                 </div>
                 
-                {{-- Consultor Info (Mini Profile) --}}
-                <div class="mt-8 flex items-center gap-4 p-6 border border-gray-100 bg-white shadow-sm" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 bg-brand-secondary rounded-full flex items-center justify-center text-white font-serif text-xl">MM</div>
-                    <div>
-                        <p class="text-sm font-bold text-brand-secondary uppercase tracking-widest">Marco Moura</p>
-                        <p class="text-[10px] text-gray-500 uppercase tracking-wide">Private Office Consultant</p>
+                {{-- CONSULTOR RESPONSÁVEL (Card Dinâmico) --}}
+                @if($property->consultant)
+                    <div class="mt-8 p-6 border border-gray-100 bg-white shadow-sm" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center gap-4 mb-4">
+                            <img src="{{ $property->consultant->photo_url }}" alt="{{ $property->consultant->name }}" class="w-16 h-16 rounded-full object-cover border border-gray-200 shadow-sm">
+                            <div>
+                                <p class="text-sm font-bold text-brand-secondary uppercase tracking-widest">{{ $property->consultant->name }}</p>
+                                <p class="text-[10px] text-gray-500 uppercase tracking-wide">{{ $property->consultant->role }}</p>
+                            </div>
+                        </div>
+                        
+                        {{-- Contactos Rápidos do Consultor --}}
+                        <div class="flex gap-2">
+                            @if($property->consultant->phone)
+                                <a href="tel:{{ $property->consultant->phone }}" class="flex-1 py-2 text-center text-[10px] font-bold uppercase tracking-widest border border-gray-200 text-gray-500 hover:bg-brand-secondary hover:text-white transition-colors">
+                                    Ligar
+                                </a>
+                            @endif
+                            @if($property->consultant->email)
+                                <a href="mailto:{{ $property->consultant->email }}" class="flex-1 py-2 text-center text-[10px] font-bold uppercase tracking-widest border border-gray-200 text-gray-500 hover:bg-brand-secondary hover:text-white transition-colors">
+                                    Email
+                                </a>
+                            @endif
+                        </div>
                     </div>
-                </div>
+                @else
+                    {{-- FALLBACK PARA MARCA (SE SEM CONSULTOR) --}}
+                    <div class="mt-8 flex items-center gap-4 p-6 border border-gray-100 bg-white shadow-sm" data-aos="fade-up" data-aos-delay="200">
+                        <div class="w-16 h-16 bg-brand-secondary rounded-full flex items-center justify-center text-white font-serif text-xl">MM</div>
+                        <div>
+                            <p class="text-sm font-bold text-brand-secondary uppercase tracking-widest">Marco Moura</p>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-wide">Private Office</p>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
 

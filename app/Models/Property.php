@@ -11,6 +11,7 @@ class Property extends Model
 
     protected $fillable = [
         'user_id',       // Necessário para a importação via CLI
+        'consultant_id', // [NOVO] Ligação ao Consultor Responsável
         'reference_code', 
         'title', 
         'slug', 
@@ -82,10 +83,19 @@ class Property extends Model
     }
 
     /**
-     * Relacionamento com o Usuário (Dono/Consultor)
+     * Relacionamento com o Usuário (Admin que criou/importou)
      */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * [NOVO] Relacionamento com o Consultor da Equipa
+     * Permite aceder aos dados do consultor via $property->consultant
+     */
+    public function consultant()
+    {
+        return $this->belongsTo(Consultant::class);
     }
 }

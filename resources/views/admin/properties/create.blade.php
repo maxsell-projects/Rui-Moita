@@ -85,18 +85,34 @@
                     </div>
                 </div>
                 
-                <div>
-                     <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-bold">Estado Comercial</label>
-                     <div class="flex gap-8">
-                         <label class="flex items-center gap-2 cursor-pointer group">
-                             <input type="radio" name="status" value="Venda" checked class="text-brand-primary focus:ring-brand-primary border-gray-300">
-                             <span class="text-xs text-gray-600 group-hover:text-brand-primary transition-colors">Para Venda</span>
-                         </label>
-                         <label class="flex items-center gap-2 cursor-pointer group">
-                             <input type="radio" name="status" value="Arrendamento" class="text-brand-primary focus:ring-brand-primary border-gray-300">
-                             <span class="text-xs text-gray-600 group-hover:text-brand-primary transition-colors">Para Arrendamento</span>
-                         </label>
-                     </div>
+                {{-- Grid: Estado Comercial & Consultor --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-end">
+                    <div>
+                          <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-3 font-bold">Estado Comercial</label>
+                          <div class="flex gap-8">
+                              <label class="flex items-center gap-2 cursor-pointer group">
+                                  <input type="radio" name="status" value="Venda" checked class="text-brand-primary focus:ring-brand-primary border-gray-300">
+                                  <span class="text-xs text-gray-600 group-hover:text-brand-primary transition-colors">Para Venda</span>
+                              </label>
+                              <label class="flex items-center gap-2 cursor-pointer group">
+                                  <input type="radio" name="status" value="Arrendamento" class="text-brand-primary focus:ring-brand-primary border-gray-300">
+                                  <span class="text-xs text-gray-600 group-hover:text-brand-primary transition-colors">Para Arrendamento</span>
+                              </label>
+                          </div>
+                    </div>
+
+                    {{-- [NOVO] SELEÇÃO DE CONSULTOR --}}
+                    <div class="group">
+                        <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 font-bold group-focus-within:text-brand-primary transition-colors">Consultor Responsável</label>
+                        <select name="consultant_id" class="w-full border-0 border-b border-gray-200 px-0 py-2 focus:border-brand-primary focus:ring-0 text-sm text-brand-secondary bg-transparent cursor-pointer">
+                            <option value="">-- Atribuir à Agência (Geral) --</option>
+                            @foreach($consultants as $consultant)
+                                <option value="{{ $consultant->id }}" {{ old('consultant_id') == $consultant->id ? 'selected' : '' }}>
+                                    {{ $consultant->name }} ({{ $consultant->role }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

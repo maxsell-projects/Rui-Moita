@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Property;
 use App\Models\PropertyImage;
+use App\Models\Consultant; // [NOVO] Importante para buscar os consultores
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -16,13 +17,17 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        $properties = Property::latest()->paginate(10);
+        // Carrega também o consultor para mostrar na tabela se quiseres
+        $properties = Property::with('consultant')->latest()->paginate(10);
         return view('admin.properties.index', compact('properties'));
     }
 
     public function create()
     {
-        return view('admin.properties.create');
+        // [NOVO] Busca consultores ativos para o Select
+        $consultants = Consultant::where('is_active', true)->orderBy('name')->get();
+        
+        return view('admin.properties.create', compact('consultants'));
     }
 
     /**
@@ -30,11 +35,17 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
+        // A validação agora inclui o consultant_id
         $data = $this->validateProperty($request);
 
         // SEO: Slug único com timestamp
         $data['slug'] = Str::slug($data['title']) . '-' . time();
         
+        // Se estiveres a usar autenticação, é boa prática associar o user que criou
+        if (auth()->check()) {
+            $data['user_id'] = auth()->id();
+        }
+
         // Mapeamento automático de checkboxes (booleans)
         $data = $this->mapCheckboxes($request, $data);
 
@@ -53,7 +64,10 @@ class PropertyController extends Controller
 
     public function edit(Property $property)
     {
-        return view('admin.properties.edit', compact('property'));
+        // [NOVO] Busca consultores para o Select de edição
+        $consultants = Consultant::where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.properties.edit', compact('property', 'consultants'));
     }
 
     /**
@@ -103,11 +117,10 @@ class PropertyController extends Controller
 
     /**
      * Listagem Pública com Filtros Inteligentes
-     * Adaptado para os dados da planilha (available, apartment, etc)
      */
     public function publicIndex(Request $request)
     {
-        $query = Property::with('images')->where('is_visible', true);
+        $query = Property::with(['images', 'consultant'])->where('is_visible', true);
 
         // Filtro de Localização (Busca ampla)
         if ($request->filled('location')) {
@@ -121,7 +134,7 @@ class PropertyController extends Controller
             });
         }
 
-        // Filtro de Tipo com mapeamento para termos do DB
+        // Filtro de Tipo
         if ($request->filled('type')) {
             $typeMap = [
                 'apartamento' => 'apartment',
@@ -134,7 +147,7 @@ class PropertyController extends Controller
             $query->where('type', $type);
         }
 
-        // Filtro de Status com mapeamento para termos da planilha
+        // Filtro de Status
         if ($request->filled('status')) {
             $statusMap = [
                 'disponivel'   => 'available',
@@ -150,7 +163,7 @@ class PropertyController extends Controller
         if ($request->filled('price_min')) $query->where('price', '>=', $request->price_min);
         if ($request->filled('price_max')) $query->where('price', '<=', $request->price_max);
 
-        // Filtro de Quartos (T0, T1, T2, T3, T4+)
+        // Filtro de Quartos
         if ($request->filled('bedrooms')) {
             if ($request->bedrooms === '4+') {
                 $query->where('bedrooms', '>=', 4);
@@ -166,7 +179,9 @@ class PropertyController extends Controller
 
     public function show(Property $property)
     {
-        $property->load('images');
+        // [NOVO] Carrega o Consultor junto com as imagens para a página de detalhes
+        $property->load(['images', 'consultant']);
+        
         return view('properties.show', compact('property'));
     }
 
@@ -181,6 +196,9 @@ class PropertyController extends Controller
                     ? Rule::unique('properties', 'reference_code')->ignore($property->id)
                     : 'unique:properties,reference_code'
             ],
+            // [NOVO] Validação do Consultor
+            'consultant_id' => 'nullable|exists:consultants,id',
+            
             'title' => 'required|string|max:255',
             'price' => 'nullable|numeric',
             'type' => 'required|string',
