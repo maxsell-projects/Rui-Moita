@@ -12,9 +12,10 @@
             
             {{-- 1. LOGO --}}
             <a href="{{ route('home') }}" class="relative z-50 group block" @click="mobileMenuOpen = false">
+                {{-- ADICIONEI 'brightness-0 invert' PARA FICAR BRANCO --}}
                 <img src="{{ asset('img/Ativo_8.png') }}" 
                      alt="Intellectus | Rui Moita Private Office" 
-                     class="h-10 md:h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
+                     class="h-10 md:h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-105 brightness-0 invert">
             </a>
 
             {{-- 2. DESKTOP MENU --}}
