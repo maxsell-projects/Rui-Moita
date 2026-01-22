@@ -12,10 +12,10 @@
             
             {{-- 1. LOGO --}}
             <a href="{{ route('home') }}" class="relative z-50 group block" @click="mobileMenuOpen = false">
-                {{-- ADICIONEI 'brightness-0 invert' PARA FICAR BRANCO --}}
+                {{-- Aumentado para h-12 (mobile) e h-20 (desktop) e removido 'brightness-0 invert' --}}
                 <img src="{{ asset('img/Ativo_8.png') }}" 
                      alt="Intellectus | Rui Moita Private Office" 
-                     class="h-10 md:h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-105 brightness-0 invert">
+                     class="h-12 md:h-20 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
             </a>
 
             {{-- 2. DESKTOP MENU --}}
@@ -60,7 +60,6 @@
                     </div>
                 </div>
 
-                {{-- NOVOS LINKS: EQUIPA & CARREIRAS --}}
                 <a href="{{ route('team') }}" class="text-[10px] font-bold uppercase tracking-[0.2em] text-white hover:text-brand-accent transition-colors relative group">
                     Equipa
                     <span class="absolute -bottom-2 left-0 w-0 h-[1px] bg-brand-accent group-hover:w-full transition-all duration-300"></span>
@@ -107,18 +106,14 @@
          x-transition:leave-end="opacity-0 translate-y-full"
          class="fixed inset-0 bg-brand-secondary z-40 flex flex-col justify-center overflow-y-auto">
         
-        {{-- Background Pattern --}}
         <div class="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
         <div class="container mx-auto px-6 relative z-10 py-12">
             <nav class="flex flex-col items-center space-y-6 text-center">
                 <a href="{{ route('home') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white hover:text-brand-accent transition-colors">Início</a>
                 <a href="{{ route('portfolio') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white hover:text-brand-accent transition-colors">Coleção Privada</a>
-                
-                {{-- NOVOS LINKS MOBILE --}}
                 <a href="{{ route('team') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white hover:text-brand-accent transition-colors">Equipa</a>
                 <a href="{{ route('recruitment') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white hover:text-brand-accent transition-colors">Carreiras</a>
-
                 <a href="{{ route('about') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white hover:text-brand-accent transition-colors">A Visão</a>
                 
                 <div class="w-12 h-[1px] bg-white/10 my-4"></div>
