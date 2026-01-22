@@ -9,7 +9,8 @@
         <p class="text-gray-500 text-sm mt-2 font-light">Gerencie os seus ativos imobiliários exclusivos.</p>
     </div>
     
-    <a href="{{ route('admin.properties.create') }}" class="bg-brand-cta text-white px-6 py-3 rounded shadow-md hover:bg-brand-primary hover:shadow-lg transition-all duration-300 uppercase text-[10px] font-bold tracking-widest flex items-center gap-2 transform hover:-translate-y-0.5">
+    {{-- Corrigido: Alterado bg-brand-cta para bg-brand-primary para seguir a nova paleta --}}
+    <a href="{{ route('admin.properties.create') }}" class="bg-brand-primary text-white px-6 py-3 rounded shadow-md hover:bg-brand-accent hover:text-brand-secondary hover:shadow-lg transition-all duration-300 uppercase text-[10px] font-bold tracking-widest flex items-center gap-2 transform hover:-translate-y-0.5">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Novo Imóvel
     </a>
@@ -21,13 +22,13 @@
         {{-- Busca Livre --}}
         <div class="md:col-span-1">
             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 font-bold">Procurar</label>
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Ref ou Título..." class="w-full border-gray-200 rounded text-sm focus:border-brand-cta focus:ring-0">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Ref ou Título..." class="w-full border-gray-200 rounded text-sm focus:border-brand-primary focus:ring-0">
         </div>
 
         {{-- Filtro Visibilidade --}}
         <div>
             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 font-bold">Visibilidade</label>
-            <select name="visibility" class="w-full border-gray-200 rounded text-sm focus:border-brand-cta focus:ring-0">
+            <select name="visibility" class="w-full border-gray-200 rounded text-sm focus:border-brand-primary focus:ring-0">
                 <option value="">Todos</option>
                 <option value="active" {{ request('visibility') === 'active' ? 'selected' : '' }}>Ativos/Visíveis</option>
                 <option value="hidden" {{ request('visibility') === 'hidden' ? 'selected' : '' }}>Ocultos</option>
@@ -37,7 +38,7 @@
         {{-- Filtro Objetivo --}}
         <div>
             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 font-bold">Objetivo</label>
-            <select name="intent" class="w-full border-gray-200 rounded text-sm focus:border-brand-cta focus:ring-0">
+            <select name="intent" class="w-full border-gray-200 rounded text-sm focus:border-brand-primary focus:ring-0">
                 <option value="">Todos</option>
                 <option value="sale" {{ request('intent') === 'sale' ? 'selected' : '' }}>Venda</option>
                 <option value="rent" {{ request('intent') === 'rent' ? 'selected' : '' }}>Arrendamento</option>
@@ -46,7 +47,7 @@
 
         {{-- Ações de Filtro --}}
         <div class="flex gap-2">
-            <button type="submit" class="flex-1 bg-brand-primary text-white px-4 py-2.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-brand-cta transition-colors">
+            <button type="submit" class="flex-1 bg-brand-primary text-white px-4 py-2.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-brand-accent hover:text-brand-secondary transition-colors">
                 Filtrar
             </button>
             @if(request()->anyFilled(['search', 'visibility', 'intent']))
@@ -92,13 +93,13 @@
                         {{-- Título e Tipo --}}
                         <td class="px-6 py-4">
                             <div class="flex flex-col">
-                                <a href="{{ route('admin.properties.edit', $property) }}" class="font-bold text-brand-primary group-hover:text-brand-cta transition-colors block mb-0.5">
+                                <a href="{{ route('admin.properties.edit', $property) }}" class="font-bold text-brand-primary group-hover:text-brand-accent transition-colors block mb-0.5">
                                     {{ Str::limit($property->title, 45) }}
                                 </a>
                                 <div class="flex items-center gap-2">
                                     <span class="text-[10px] text-gray-400 font-light uppercase tracking-wider">{{ $property->type }}</span>
                                     <span class="text-gray-300">|</span>
-                                    <span class="text-[10px] {{ $property->status === 'rent' ? 'text-blue-500' : 'text-brand-cta' }} font-bold uppercase tracking-widest">
+                                    <span class="text-[10px] {{ $property->status === 'rent' ? 'text-blue-500' : 'text-brand-accent' }} font-bold uppercase tracking-widest">
                                         {{ $property->status === 'rent' ? 'Arrendamento' : 'Venda' }}
                                     </span>
                                 </div>
@@ -133,7 +134,7 @@
                                 @endif
 
                                 @if($property->is_featured)
-                                    <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-[9px] font-bold bg-brand-premium/10 text-brand-premium border border-brand-premium/20 uppercase tracking-wider w-full max-w-[60px]" title="Destaque na Home">
+                                    <span class="inline-flex items-center justify-center px-2 py-0.5 rounded text-[9px] font-bold bg-brand-accent/10 text-brand-accent border border-brand-accent/20 uppercase tracking-wider w-full max-w-[60px]" title="Destaque na Home">
                                         ★ Top
                                     </span>
                                 @endif
@@ -147,7 +148,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 5 8.268 7.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </a>
                                 
-                                <a href="{{ route('admin.properties.edit', $property) }}" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-brand-cta/10 text-gray-400 hover:text-brand-cta transition-colors" title="Editar">
+                                <a href="{{ route('admin.properties.edit', $property) }}" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-brand-accent/10 text-gray-400 hover:text-brand-accent transition-colors" title="Editar">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </a>
                                 
