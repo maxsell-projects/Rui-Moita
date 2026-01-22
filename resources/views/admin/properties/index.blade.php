@@ -15,6 +15,49 @@
     </a>
 </div>
 
+{{-- Barra de Filtros --}}
+<div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+    <form action="{{ route('admin.properties.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        {{-- Busca Livre --}}
+        <div class="md:col-span-1">
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 font-bold">Procurar</label>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Ref ou Título..." class="w-full border-gray-200 rounded text-sm focus:border-brand-cta focus:ring-0">
+        </div>
+
+        {{-- Filtro Visibilidade --}}
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 font-bold">Visibilidade</label>
+            <select name="visibility" class="w-full border-gray-200 rounded text-sm focus:border-brand-cta focus:ring-0">
+                <option value="">Todos</option>
+                <option value="active" {{ request('visibility') === 'active' ? 'selected' : '' }}>Ativos/Visíveis</option>
+                <option value="hidden" {{ request('visibility') === 'hidden' ? 'selected' : '' }}>Ocultos</option>
+            </select>
+        </div>
+
+        {{-- Filtro Objetivo --}}
+        <div>
+            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 font-bold">Objetivo</label>
+            <select name="intent" class="w-full border-gray-200 rounded text-sm focus:border-brand-cta focus:ring-0">
+                <option value="">Todos</option>
+                <option value="sale" {{ request('intent') === 'sale' ? 'selected' : '' }}>Venda</option>
+                <option value="rent" {{ request('intent') === 'rent' ? 'selected' : '' }}>Arrendamento</option>
+            </select>
+        </div>
+
+        {{-- Ações de Filtro --}}
+        <div class="flex gap-2">
+            <button type="submit" class="flex-1 bg-brand-primary text-white px-4 py-2.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-brand-cta transition-colors">
+                Filtrar
+            </button>
+            @if(request()->anyFilled(['search', 'visibility', 'intent']))
+                <a href="{{ route('admin.properties.index') }}" class="flex-1 bg-gray-100 text-gray-500 px-4 py-2.5 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors text-center">
+                    Limpar
+                </a>
+            @endif
+        </div>
+    </form>
+</div>
+
 {{-- Tabela de Imóveis --}}
 <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
     <div class="overflow-x-auto">
@@ -48,10 +91,18 @@
 
                         {{-- Título e Tipo --}}
                         <td class="px-6 py-4">
-                            <a href="{{ route('admin.properties.edit', $property) }}" class="font-bold text-brand-primary group-hover:text-brand-cta transition-colors block mb-0.5">
-                                {{ Str::limit($property->title, 45) }}
-                            </a>
-                            <span class="text-xs text-gray-400 font-light">{{ $property->type }}</span>
+                            <div class="flex flex-col">
+                                <a href="{{ route('admin.properties.edit', $property) }}" class="font-bold text-brand-primary group-hover:text-brand-cta transition-colors block mb-0.5">
+                                    {{ Str::limit($property->title, 45) }}
+                                </a>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] text-gray-400 font-light uppercase tracking-wider">{{ $property->type }}</span>
+                                    <span class="text-gray-300">|</span>
+                                    <span class="text-[10px] {{ $property->status === 'rent' ? 'text-blue-500' : 'text-brand-cta' }} font-bold uppercase tracking-widest">
+                                        {{ $property->status === 'rent' ? 'Arrendamento' : 'Venda' }}
+                                    </span>
+                                </div>
+                            </div>
                         </td>
 
                         {{-- Preço --}}
@@ -92,17 +143,14 @@
                         {{-- Ações --}}
                         <td class="px-6 py-4 text-right">
                             <div class="flex justify-end items-center gap-2">
-                                {{-- Ver no Site --}}
                                 <a href="{{ route('properties.show', $property->slug) }}" target="_blank" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-brand-primary transition-colors" title="Ver no Site">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 5 8.268 7.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 </a>
                                 
-                                {{-- Editar --}}
                                 <a href="{{ route('admin.properties.edit', $property) }}" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-brand-cta/10 text-gray-400 hover:text-brand-cta transition-colors" title="Editar">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 </a>
                                 
-                                {{-- Apagar --}}
                                 <form action="{{ route('admin.properties.destroy', $property) }}" method="POST" onsubmit="return confirm('Tem a certeza que deseja eliminar permanentemente este imóvel?');" class="inline-block">
                                     @csrf
                                     @method('DELETE')
@@ -114,7 +162,6 @@
                         </td>
                     </tr>
                 @empty
-                    {{-- Estado Vazio --}}
                     <tr>
                         <td colspan="6" class="px-6 py-16 text-center">
                             <div class="flex flex-col items-center justify-center">
@@ -122,10 +169,7 @@
                                     <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                                 </div>
                                 <h3 class="text-lg font-didot text-gray-700">Nenhum imóvel encontrado</h3>
-                                <p class="text-gray-400 text-sm font-light mt-1">O seu portfólio está vazio neste momento.</p>
-                                <a href="{{ route('admin.properties.create') }}" class="mt-4 text-brand-cta hover:text-brand-primary text-xs font-bold uppercase tracking-widest border-b border-brand-cta hover:border-brand-primary pb-0.5 transition-all">
-                                    Adicionar o primeiro imóvel
-                                </a>
+                                <p class="text-gray-400 text-sm font-light mt-1">Tente ajustar os filtros ou adicionar um novo imóvel.</p>
                             </div>
                         </td>
                     </tr>
