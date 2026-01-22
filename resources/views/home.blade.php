@@ -5,7 +5,8 @@
 @section('content')
 
     {{-- 1. HERO: A AUTORIDADE SILENCIOSA --}}
-    <section class="relative min-h-screen flex items-center bg-intellectus-primary text-white overflow-hidden pt-20">
+    {{-- Aumentado pt-20 para pt-32 no mobile para evitar colisão com o Header fixed --}}
+    <section class="relative min-h-screen flex items-center bg-intellectus-primary text-white overflow-hidden pt-32 lg:pt-20">
         
         {{-- Grid Decorativo (Subtil) --}}
         <div class="absolute inset-0 pointer-events-none opacity-10" 
@@ -28,10 +29,10 @@
                 </p>
 
                 <div class="mt-12 flex flex-col md:flex-row gap-6">
-                    <a href="#analise-estrategica" class="group relative px-8 py-4 bg-intellectus-accent text-intellectus-base font-sans text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors duration-500">
+                    <a href="#analise-estrategica" class="group relative px-8 py-4 bg-intellectus-accent text-intellectus-base font-sans text-xs font-bold uppercase tracking-widest hover:bg-white transition-colors duration-500 text-center">
                         Iniciar Conversa Estratégica
                     </a>
-                    <a href="#atuacao" class="group px-8 py-4 border border-white/20 text-white font-sans text-xs font-bold uppercase tracking-widest hover:border-intellectus-accent hover:text-intellectus-accent transition-colors duration-500">
+                    <a href="#atuacao" class="group px-8 py-4 border border-white/20 text-white font-sans text-xs font-bold uppercase tracking-widest hover:border-intellectus-accent hover:text-intellectus-accent transition-colors duration-500 text-center">
                         Nossa Atuação
                     </a>
                 </div>
@@ -90,7 +91,6 @@
     {{-- 4. O CONSULTOR (Líder) --}}
     <section class="py-24 bg-intellectus-base text-white relative overflow-hidden">
         <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {{-- Foto --}}
             <div class="relative order-2 lg:order-1">
                 <div class="aspect-[3/4] bg-gray-800 grayscale relative overflow-hidden border border-white/10">
                     <img src="{{ asset('img/1.jpeg') }}" alt="Consultor Senior" class="object-cover w-full h-full hover:scale-105 transition-transform duration-1000 opacity-80 hover:opacity-100">
@@ -146,7 +146,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {{-- Card 1 --}}
                 <div class="bg-white p-12 hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 border border-gray-100 group">
                     <span class="text-4xl font-serif text-gray-200 group-hover:text-intellectus-accent transition-colors">01.</span>
                     <h3 class="font-serif text-2xl mt-4 mb-4 text-intellectus-primary">Aquisição de Ativos</h3>
@@ -156,7 +155,6 @@
                     <a href="{{ route('portfolio') }}" class="text-xs font-bold uppercase tracking-widest text-intellectus-base border-b border-intellectus-base pb-1">Ver Portfólio</a>
                 </div>
 
-                {{-- Card 2 --}}
                 <div class="bg-white p-12 hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 border border-gray-100 group">
                     <span class="text-4xl font-serif text-gray-200 group-hover:text-intellectus-accent transition-colors">02.</span>
                     <h3 class="font-serif text-2xl mt-4 mb-4 text-intellectus-primary">Desinvestimento Estratégico</h3>
@@ -173,9 +171,8 @@
     <section class="py-0 bg-intellectus-base text-white">
         <div class="grid grid-cols-1 lg:grid-cols-2">
             <div class="relative h-96 lg:h-auto min-h-[400px] overflow-hidden group">
-                {{-- Imagem de Fundo (Ex: Arquitetura ou Escritório) --}}
                 <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop" 
-                     class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000">
+                     class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" alt="Recruitment">
                 <div class="absolute inset-0 bg-gradient-to-r from-intellectus-base/90 to-transparent"></div>
             </div>
             

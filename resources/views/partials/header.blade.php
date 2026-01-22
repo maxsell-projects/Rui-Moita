@@ -1,9 +1,9 @@
 <header x-data="{ mobileMenuOpen: false, toolsOpen: false, scrolled: false }" 
         @scroll.window="scrolled = (window.pageYOffset > 20)"
         :class="{ 
-            'bg-brand-secondary shadow-none py-6': mobileMenuOpen, 
-            'bg-brand-secondary/95 backdrop-blur-md shadow-lg py-4': scrolled && !mobileMenuOpen, 
-            'bg-transparent py-6': !scrolled && !mobileMenuOpen 
+            'bg-brand-secondary shadow-none py-4': mobileMenuOpen, 
+            'bg-brand-secondary/95 backdrop-blur-md shadow-lg py-3': scrolled && !mobileMenuOpen, 
+            'bg-transparent py-5': !scrolled && !mobileMenuOpen 
         }"
         class="fixed top-0 w-full z-50 transition-all duration-500 border-b border-white/5">
     
@@ -12,10 +12,10 @@
             
             {{-- 1. LOGO --}}
             <a href="{{ route('home') }}" class="relative z-50 group block" @click="mobileMenuOpen = false">
-                {{-- Aumentado para h-12 (mobile) e h-20 (desktop) e removido 'brightness-0 invert' --}}
+                {{-- Redução dinâmica para evitar colisão em telas pequenas --}}
                 <img src="{{ asset('img/Ativo_8.png') }}" 
                      alt="Intellectus | Rui Moita Private Office" 
-                     class="h-12 md:h-20 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
+                     class="h-10 sm:h-12 md:h-20 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
             </a>
 
             {{-- 2. DESKTOP MENU --}}
@@ -75,7 +75,6 @@
                     <span class="absolute -bottom-2 left-0 w-0 h-[1px] bg-brand-accent group-hover:w-full transition-all duration-300"></span>
                 </a>
                 
-                {{-- CTA Button --}}
                 <a href="{{ route('contact') }}" 
                    class="ml-4 bg-brand-accent text-brand-secondary px-6 py-3 uppercase text-[9px] font-bold tracking-[0.2em] border border-transparent hover:bg-white hover:text-brand-primary transition-all duration-500 shadow-lg">
                     Agendar Reunião
@@ -89,7 +88,9 @@
                     <span x-show="!mobileMenuOpen" class="transform transition w-full h-px bg-current absolute translate-y-2"></span>
                     <span x-show="!mobileMenuOpen" class="transform transition w-full h-px bg-current absolute"></span>
                     
-                    <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transform rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" /></svg>
+                    <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transform transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </div>
             </button>
         </div>
@@ -106,8 +107,6 @@
          x-transition:leave-end="opacity-0 translate-y-full"
          class="fixed inset-0 bg-brand-secondary z-40 flex flex-col justify-center overflow-y-auto">
         
-        <div class="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-
         <div class="container mx-auto px-6 relative z-10 py-12">
             <nav class="flex flex-col items-center space-y-6 text-center">
                 <a href="{{ route('home') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white hover:text-brand-accent transition-colors">Início</a>
