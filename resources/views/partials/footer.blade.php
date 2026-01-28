@@ -7,7 +7,7 @@
 
     <div class="container mx-auto px-6 relative z-10">
         
-        {{-- TOP SECTION: Brand & Newsletter --}}
+        {{-- TOP SECTION: Brand & Slogan --}}
         <div class="flex flex-col md:flex-row justify-between items-start border-b border-white/5 pb-16 mb-16 gap-12">
             <div class="max-w-md">
                 <a href="{{ route('home') }}" class="block mb-6 group">
@@ -15,21 +15,9 @@
                     <span class="text-[9px] uppercase tracking-[0.4em] text-brand-accent group-hover:text-white transition-colors">Rui Moita Private Office</span>
                 </a>
                 <p class="text-white/60 font-light leading-relaxed text-sm">
-                    Consultoria imobiliária independente especializada em ativos de investimento e propriedades de luxo. 
-                    <br><span class="italic text-white/80">Rigor, Discrição e Estratégia.</span>
+                    {{ __('Consultoria imobiliária independente especializada em ativos de investimento e propriedades de luxo.') }}
+                    <br><span class="italic text-white/80">{{ __('Rigor, Discrição e Estratégia.') }}</span>
                 </p>
-            </div>
-
-            {{-- Newsletter --}}
-            <div class="w-full md:w-auto">
-                <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-4">Junte-se ao Private Circle</h4>
-                <form class="flex flex-col md:flex-row gap-4">
-                    <input type="email" placeholder="O seu email corporativo" class="bg-white/5 border border-white/10 text-white px-4 py-3 w-full md:w-80 focus:outline-none focus:border-brand-accent transition-colors text-sm font-light placeholder-white/30">
-                    <button type="button" class="bg-brand-primary text-white px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-brand-secondary transition-colors shadow-lg border border-transparent hover:border-brand-primary">
-                        Subscrever
-                    </button>
-                </form>
-                <p class="text-[10px] text-white/30 mt-2">Apenas *Market Insights* relevantes. Zero spam.</p>
             </div>
         </div>
 
@@ -39,40 +27,40 @@
             {{-- 1. ESCRITÓRIO --}}
             <div>
                 <h5 class="text-xs font-bold uppercase tracking-widest mb-8 text-white flex items-center gap-2">
-                    <span class="w-2 h-2 bg-brand-accent rounded-full"></span> O Escritório
+                    <span class="w-2 h-2 bg-brand-accent rounded-full"></span> {{ __('O Escritório') }}
                 </h5>
                 <ul class="space-y-4 text-sm text-white/70 font-light">
                     <li>
-                        <span class="block text-[10px] uppercase opacity-40 mb-1">Morada</span>
-                        Avenida da Liberdade, 100<br>
-                        1250-144 Lisboa, Portugal
+                        <span class="block text-[10px] uppercase opacity-40 mb-1">{{ __('Morada') }}</span>
+                        Rua José Félix Ferreira 2a<br>
+                        2830-222 Barreiro, Portugal
                     </li>
                     <li>
-                        <span class="block text-[10px] uppercase opacity-40 mb-1">Contacto Directo</span>
-                        <a href="tel:+351910000000" class="hover:text-white transition">+351 910 000 000</a>
-                        <span class="text-[10px] opacity-50 ml-2">(Rede móvel nacional)</span>
+                        <span class="block text-[10px] uppercase opacity-40 mb-1">{{ __('Contacto Directo') }}</span>
+                        <a href="tel:+351963947269" class="hover:text-white transition">+351 963 947 269</a>
+                        <span class="text-[10px] opacity-50 ml-2">({{ __('Rede móvel nacional') }})</span>
                     </li>
                     <li>
-                        <span class="block text-[10px] uppercase opacity-40 mb-1">Email</span>
-                        <a href="mailto:contact@intellectus.pt" class="hover:text-white transition">contact@intellectus.pt</a>
+                        <span class="block text-[10px] uppercase opacity-40 mb-1">{{ __('Email') }}</span>
+                        <a href="mailto:geral@imointellectus.com" class="hover:text-white transition">geral@imointellectus.com</a>
                     </li>
                     <li>
-                        <span class="block text-[10px] uppercase opacity-40 mb-1">Horário de Atendimento</span>
-                        9h às 20h
+                        <span class="block text-[10px] uppercase opacity-40 mb-1">{{ __('Horário de Atendimento') }}</span>
+                        9h - 20h
                     </li>
                 </ul>
             </div>
 
             {{-- 2. NAVEGAÇÃO --}}
             <div>
-                <h5 class="text-xs font-bold uppercase tracking-widest mb-8 text-white">Menu</h5>
+                <h5 class="text-xs font-bold uppercase tracking-widest mb-8 text-white">{{ __('Menu') }}</h5>
                 <ul class="space-y-3 text-sm text-white/70 font-light">
-                    <li><a href="{{ route('home') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300">Início</a></li>
-                    <li><a href="{{ route('portfolio') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300">Coleção Privada</a></li>
-                    <li><a href="{{ route('about') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300">A Visão</a></li>
-                    <li><a href="{{ route('contact') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300">Contactos</a></li>
+                    <li><a href="{{ route('home') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300">{{ __('Início') }}</a></li>
+                    <li><a href="{{ route('portfolio') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300">{{ __('Coleção Privada') }}</a></li>
+                    <li><a href="{{ route('about') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300">{{ __('A Visão') }}</a></li>
+                    <li><a href="{{ route('contact') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300">{{ __('Contactos') }}</a></li>
                     {{-- Link Trabalhe Conosco --}}
-                    <li><a href="mailto:recrutamento@intellectus.pt?subject=Candidatura%20Espontânea" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300 flex items-center gap-2">Trabalhe Conosco <span class="text-[10px] opacity-50">↗</span></a></li>
+                    <li><a href="{{ route('recruitment') }}" class="hover:text-brand-accent transition-colors hover:pl-2 duration-300 flex items-center gap-2">{{ __('Trabalhe Connosco') }} <span class="text-[10px] opacity-50">↗</span></a></li>
                 </ul>
             </div>
 
@@ -80,14 +68,14 @@
             <div x-data>
                 <h5 class="text-xs font-bold uppercase tracking-widest mb-8 text-white">Legal & Compliance</h5>
                 <ul class="space-y-3 text-xs text-white/50 font-light font-mono">
-                    <li>AMI: <span class="text-white">12345</span></li>
-                    <li>NIF: <span class="text-white">500100200</span></li>
+                    <li>AMI: <span class="text-white">26690</span></li>
+                    <li>NIF: <span class="text-white">518902358</span></li>
                     <li class="pt-4 border-t border-white/5">
-                        <a href="{{ route('terms') }}" class="hover:text-white transition">Termos e Condições</a>
+                        <a href="{{ route('terms') }}" class="hover:text-white transition">{{ __('Termos e Condições') }}</a>
                     </li>
-                    <li><button @click="$dispatch('open-privacy-modal', {tab: 'privacy'})" class="hover:text-white transition text-left">Política de Privacidade</button></li>
-                    <li><button @click="$dispatch('open-privacy-modal', {tab: 'cookies'})" class="hover:text-white transition text-left">Política de Cookies</button></li>
-                    <li><button @click="$dispatch('open-privacy-modal', {tab: 'ral'})" class="hover:text-white transition text-left">Resolução de Litígios (RAL)</button></li>
+                    <li><button @click="$dispatch('open-privacy-modal', {tab: 'privacy'})" class="hover:text-white transition text-left">{{ __('Política de Privacidade') }}</button></li>
+                    <li><button @click="$dispatch('open-privacy-modal', {tab: 'cookies'})" class="hover:text-white transition text-left">{{ __('Política de Cookies') }}</button></li>
+                    <li><button @click="$dispatch('open-privacy-modal', {tab: 'ral'})" class="hover:text-white transition text-left">{{ __('Resolução de Litígios (RAL)') }}</button></li>
                 </ul>
             </div>
 
@@ -114,7 +102,7 @@
                 {{-- Link Livro Reclamações --}}
                 <div class="mt-8">
                     <a href="https://www.livroreclamacoes.pt" target="_blank" class="text-[10px] uppercase tracking-widest text-white/40 hover:text-brand-accent border-b border-transparent hover:border-brand-accent pb-1 transition-all">
-                        Livro de Reclamações Eletrónico
+                        {{ __('Livro de Reclamações Eletrónico') }}
                     </a>
                 </div>
             </div>
@@ -122,10 +110,10 @@
 
         {{-- COPYRIGHT --}}
         <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest text-white/30">
-            <p>&copy; {{ date('Y') }} Rui Moita - Intellectus. Todos os direitos reservados.</p>
+            <p>&copy; {{ date('Y') }} Rui Moita - Intellectus. {{ __('Todos os direitos reservados.') }}</p>
             
             <div class="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
-                <span>Desenvolvido por</span>
+                <span>{{ __('Desenvolvido por') }}</span>
                 <a href="https://www.maxselladvisor.com" target="_blank" rel="noopener noreferrer">
                     <img src="{{ asset('img/maxsell.png') }}" alt="Maxsell Advisor" class="h-5 w-auto grayscale hover:grayscale-0 transition-all duration-500">
                 </a>

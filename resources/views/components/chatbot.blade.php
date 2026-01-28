@@ -21,7 +21,7 @@
             <div class="flex items-center gap-3 relative z-10">
                 <div class="w-2.5 h-2.5 rounded-full bg-brand-accent animate-pulse shadow-[0_0_8px_rgba(197,160,89,0.8)]"></div>
                 <div>
-                    <h3 class="font-serif text-sm tracking-widest uppercase text-white">Rui Moita</h3>
+                    <h3 class="font-serif text-sm tracking-widest uppercase text-white">Intellectus</h3>
                     <p class="text-[9px] text-brand-accent uppercase tracking-wider">Private AI Assistant</p>
                 </div>
             </div>

@@ -8,9 +8,10 @@ use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\RecruitmentController;
-// Novos Controllers
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AdminConsultantController;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,15 @@ use App\Http\Controllers\AdminConsultantController;
 */
 
 // --- HOME & INSTITUCIONAL ---
+
+
+Route::get('lang/{locale}', function ($locale) {
+    // Valida se o idioma é suportado para evitar erros
+    if (in_array($locale, ['pt', 'en'])) {
+        Session::put('locale', $locale); // Guarda na sessão
+    }
+    return back(); // Volta para a página onde estavas
+})->name('lang.switch');
 
 Route::get('/', function () {
     // Busca apenas 3 imóveis destaque para a Home (Performance otimizada)

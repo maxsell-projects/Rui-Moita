@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'A Nossa Equipa')
+@section('title', __('A Nossa Equipa'))
 
 @section('content')
 
@@ -11,13 +11,13 @@
     <section class="relative py-20 bg-brand-secondary text-white overflow-hidden">
         <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div class="container mx-auto px-6 relative z-10 text-center">
-            <p class="text-brand-accent uppercase tracking-[0.3em] text-[10px] font-bold mb-3 animate-fade-in-up">Intellectus Private Office</p>
+            <p class="text-brand-accent uppercase tracking-[0.3em] text-[10px] font-bold mb-3 animate-fade-in-up">{{ __('Intellectus Private Office') }}</p>
             <h1 class="font-serif text-3xl md:text-5xl mb-4 leading-tight animate-fade-in-up delay-100">
-                Os nossos especialistas.
+                {{ __('Os nossos especialistas.') }}
             </h1>
             <div class="w-16 h-[1px] bg-brand-accent mx-auto mb-4"></div>
             <p class="font-light text-base text-white/80 max-w-2xl mx-auto animate-fade-in-up delay-200">
-                Rigor, discrição e resultados. Conheça a equipa que protege o seu património.
+                {{ __('Rigor, discrição e resultados. Conheça a equipa que protege o seu património.') }}
             </p>
         </div>
     </section>
@@ -39,7 +39,7 @@
                             {{-- Overlay "Ver Perfil" --}}
                             <div class="absolute inset-0 bg-brand-secondary/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                                 <span class="text-white text-[10px] uppercase font-bold tracking-widest border border-white/30 px-3 py-2">
-                                    Ver Perfil
+                                    {{ __('Ver Perfil') }}
                                 </span>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                     </div>
                 @empty
                     <div class="col-span-full text-center py-20">
-                        <p class="text-gray-400 font-serif italic">A equipa está a ser atualizada.</p>
+                        <p class="text-gray-400 font-serif italic">{{ __('A equipa está a ser atualizada.') }}</p>
                     </div>
                 @endforelse
 
@@ -114,12 +114,12 @@
                             {!! nl2br(e($consultant->bio)) !!}
                         </div>
                     @else
-                        <p class="text-gray-400 italic mb-8">Sem biografia disponível.</p>
+                        <p class="text-gray-400 italic mb-8">{{ __('Sem biografia disponível.') }}</p>
                     @endif
 
                     {{-- Contactos --}}
                     <div class="space-y-4">
-                        <h4 class="font-serif text-lg text-brand-secondary mb-4">Contactos Diretos</h4>
+                        <h4 class="font-serif text-lg text-brand-secondary mb-4">{{ __('Contactos Diretos') }}</h4>
                         
                         @if($consultant->phone)
                             <div class="flex items-center gap-4 group">
@@ -127,7 +127,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Telefone</p>
+                                    <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">{{ __('Telefone') }}</p>
                                     <a href="tel:{{ $consultant->phone }}" class="font-serif text-lg text-brand-secondary hover:text-brand-accent transition-colors">{{ $consultant->phone }}</a>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Email</p>
+                                    <p class="text-[10px] uppercase tracking-widest text-gray-400 font-bold">{{ __('Email') }}</p>
                                     <a href="mailto:{{ $consultant->email }}" class="font-serif text-lg text-brand-secondary hover:text-brand-accent transition-colors">{{ $consultant->email }}</a>
                                 </div>
                             </div>
@@ -176,12 +176,12 @@
 {{-- CTA Recruitment --}}
 <section class="py-20 bg-gray-50 border-t border-gray-200">
     <div class="container mx-auto px-6 text-center">
-        <h2 class="font-serif text-3xl text-brand-secondary mb-4">Junte-se a nós</h2>
+        <h2 class="font-serif text-3xl text-brand-secondary mb-4">{{ __('Junte-se a nós') }}</h2>
         <p class="text-gray-500 font-light mb-8 max-w-xl mx-auto">
-            Procuramos profissionais alinhados com a nossa cultura de excelência.
+            {{ __('Procuramos profissionais alinhados com a nossa cultura de excelência.') }}
         </p>
         <a href="{{ route('recruitment') }}" class="inline-block px-10 py-4 bg-brand-secondary text-white uppercase text-xs font-bold tracking-[0.2em] hover:bg-brand-accent hover:text-brand-secondary transition-all shadow-lg transform hover:-translate-y-1">
-            Trabalhe Connosco
+            {{ __('Trabalhe Connosco') }}
         </a>
     </div>
 </section>

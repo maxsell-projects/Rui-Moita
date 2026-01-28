@@ -8,13 +8,13 @@
     
     <div class="container mx-auto px-6 relative z-10" data-aos="fade-up">
         <p class="text-brand-premium font-mono text-xs uppercase tracking-[0.4em] mb-6">
-            Fiscalidade Imobiliária
+            {{ __('Fiscalidade Imobiliária') }}
         </p>
         <h1 class="text-4xl md:text-6xl font-didot leading-tight">
-            Simulador de IMT & Selo
+            {{ __('Simulador de IMT & Selo') }}
         </h1>
         <p class="text-gray-300 font-light max-w-2xl mx-auto mt-6 text-lg">
-            Calcule os impostos de aquisição com precisão, incluindo as novas regras de isenção para jovens (OE 2025).
+            {{ __('Calcule os impostos de aquisição com precisão, incluindo as novas regras de isenção para jovens (OE 2025).') }}
         </p>
     </div>
 </div>
@@ -29,25 +29,25 @@
                 
                 <h3 class="text-xl font-didot text-brand-primary mb-8 flex items-center gap-3">
                     <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary text-white font-serif font-bold text-sm">1</span>
-                    Dados da Transação
+                    {{ __('Dados da Transação') }}
                 </h3>
                 
                 <div class="space-y-8">
                     
                     {{-- Localização --}}
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Localização do Imóvel</label>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">{{ __('Localização do Imóvel') }}</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <label class="cursor-pointer group">
                                 <input type="radio" name="location" value="continente" x-model="location" @change="calculate()" class="peer sr-only">
                                 <div class="px-6 py-4 rounded border-2 border-gray-100 peer-checked:border-brand-primary peer-checked:bg-brand-primary peer-checked:text-white transition-all text-sm font-bold text-center text-gray-500 group-hover:border-gray-300">
-                                    Portugal Continental
+                                    {{ __('Portugal Continental') }}
                                 </div>
                             </label>
                             <label class="cursor-pointer group">
                                 <input type="radio" name="location" value="ilhas" x-model="location" @change="calculate()" class="peer sr-only">
                                 <div class="px-6 py-4 rounded border-2 border-gray-100 peer-checked:border-brand-primary peer-checked:bg-brand-primary peer-checked:text-white transition-all text-sm font-bold text-center text-gray-500 group-hover:border-gray-300">
-                                    Açores / Madeira
+                                    {{ __('Açores / Madeira') }}
                                 </div>
                             </label>
                         </div>
@@ -55,19 +55,19 @@
 
                     {{-- Finalidade --}}
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Finalidade</label>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">{{ __('Finalidade') }}</label>
                         <select x-model="purpose" @change="calculate()" class="w-full bg-gray-50 border-0 border-b-2 border-gray-200 px-4 py-3 focus:ring-0 focus:border-brand-premium cursor-pointer text-brand-primary">
-                            <option value="hpp">Habitação Própria Permanente (HPP)</option>
-                            <option value="secundaria">Habitação Secundária / Arrendamento</option>
-                            <option value="rustico">Prédios Rústicos</option>
-                            <option value="urbano">Outros Prédios Urbanos / Terrenos</option>
-                            <option value="offshore_pessoal">Residente em Paraíso Fiscal</option>
+                            <option value="hpp">{{ __('Habitação Própria Permanente (HPP)') }}</option>
+                            <option value="secundaria">{{ __('Habitação Secundária / Arrendamento') }}</option>
+                            <option value="rustico">{{ __('Prédios Rústicos') }}</option>
+                            <option value="urbano">{{ __('Outros Prédios Urbanos / Terrenos') }}</option>
+                            <option value="offshore_pessoal">{{ __('Residente em Paraíso Fiscal') }}</option>
                         </select>
                     </div>
 
                     {{-- Valor --}}
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Valor de Aquisição (€)</label>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">{{ __('Valor de Aquisição (€)') }}</label>
                         <div class="relative">
                             <input type="number" x-model.number="propertyValue" @input="calculate()" 
                                    class="w-full bg-gray-50 border-0 border-b-2 border-gray-200 px-4 py-3 focus:ring-0 focus:border-brand-premium transition-colors text-lg font-serif text-brand-primary placeholder-gray-300" 
@@ -77,7 +77,7 @@
 
                     {{-- Compradores --}}
                     <div>
-                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Nº de Compradores</label>
+                        <label class="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">{{ __('Nº de Compradores') }}</label>
                         <div class="flex gap-4">
                             <label class="cursor-pointer flex-1 group">
                                 <input type="radio" name="buyers" :value="1" x-model.number="buyersCount" @change="calculate()" class="peer sr-only">
@@ -96,28 +96,28 @@
                 <div x-show="purpose === 'hpp'" x-transition class="mt-8 pt-8 border-t border-gray-100">
                     <h3 class="text-xl font-didot text-brand-primary mb-6 flex items-center gap-3">
                         <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary text-white font-serif font-bold text-sm">2</span>
-                        Elegibilidade IMT Jovem
+                        {{ __('Elegibilidade IMT Jovem') }}
                     </h3>
                     
                     <div class="space-y-6">
                         {{-- Comprador 1 --}}
                         <div class="bg-[#F5F7FA] p-6 rounded border border-gray-200">
-                            <span class="text-xs font-bold uppercase text-brand-primary tracking-wider mb-4 block">Comprador 1</span>
+                            <span class="text-xs font-bold uppercase text-brand-primary tracking-wider mb-4 block">{{ __('Comprador 1') }}</span>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-[10px] font-bold text-gray-500 mb-2">Idade</label>
+                                    <label class="block text-[10px] font-bold text-gray-500 mb-2">{{ __('Idade') }}</label>
                                     <input type="number" x-model.number="buyer1Age" @input="checkAge(1); calculate()" class="w-full border-gray-300 rounded text-sm focus:border-brand-cta focus:ring-0">
                                 </div>
                                 
                                 <div>
                                     <div class="flex items-center justify-between mb-2">
-                                        <label class="block text-[10px] font-bold text-gray-500">Elegível IMT Jovem?</label>
-                                        <span class="text-[10px] text-gray-400 cursor-help" title="Até 35 anos, 1ª Habitação">Ajuda (?)</span>
+                                        <label class="block text-[10px] font-bold text-gray-500">{{ __('Elegível IMT Jovem?') }}</label>
+                                        <span class="text-[10px] text-gray-400 cursor-help" title="{{ __('Até 35 anos, 1ª Habitação') }}">{{ __('Ajuda (?)') }}</span>
                                     </div>
                                     <div class="flex gap-2">
-                                        <button type="button" @click="setBuyerEligible(1, true)" :class="buyer1Eligible ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-500 border-gray-300'" class="flex-1 py-2 text-xs border rounded transition-all font-bold">Sim</button>
-                                        <button type="button" @click="setBuyerEligible(1, false)" :class="!buyer1Eligible ? 'bg-gray-200 text-gray-800 border-gray-300' : 'bg-white text-gray-500 border-gray-300'" class="flex-1 py-2 text-xs border rounded transition-all font-bold">Não</button>
+                                        <button type="button" @click="setBuyerEligible(1, true)" :class="buyer1Eligible ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-500 border-gray-300'" class="flex-1 py-2 text-xs border rounded transition-all font-bold">{{ __('Sim') }}</button>
+                                        <button type="button" @click="setBuyerEligible(1, false)" :class="!buyer1Eligible ? 'bg-gray-200 text-gray-800 border-gray-300' : 'bg-white text-gray-500 border-gray-300'" class="flex-1 py-2 text-xs border rounded transition-all font-bold">{{ __('Não') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -125,21 +125,21 @@
 
                         {{-- Comprador 2 --}}
                         <div x-show="buyersCount === 2" x-transition class="bg-[#F5F7FA] p-6 rounded border border-gray-200">
-                            <span class="text-xs font-bold uppercase text-brand-primary tracking-wider mb-4 block">Comprador 2</span>
+                            <span class="text-xs font-bold uppercase text-brand-primary tracking-wider mb-4 block">{{ __('Comprador 2') }}</span>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-[10px] font-bold text-gray-500 mb-2">Idade</label>
+                                    <label class="block text-[10px] font-bold text-gray-500 mb-2">{{ __('Idade') }}</label>
                                     <input type="number" x-model.number="buyer2Age" @input="checkAge(2); calculate()" class="w-full border-gray-300 rounded text-sm focus:border-brand-cta focus:ring-0">
                                 </div>
                                 
                                 <div>
                                     <div class="flex items-center justify-between mb-2">
-                                        <label class="block text-[10px] font-bold text-gray-500">Elegível IMT Jovem?</label>
+                                        <label class="block text-[10px] font-bold text-gray-500">{{ __('Elegível IMT Jovem?') }}</label>
                                     </div>
                                     <div class="flex gap-2">
-                                        <button type="button" @click="setBuyerEligible(2, true)" :class="buyer2Eligible ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-500 border-gray-300'" class="flex-1 py-2 text-xs border rounded transition-all font-bold">Sim</button>
-                                        <button type="button" @click="setBuyerEligible(2, false)" :class="!buyer2Eligible ? 'bg-gray-200 text-gray-800 border-gray-300' : 'bg-white text-gray-500 border-gray-300'" class="flex-1 py-2 text-xs border rounded transition-all font-bold">Não</button>
+                                        <button type="button" @click="setBuyerEligible(2, true)" :class="buyer2Eligible ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-500 border-gray-300'" class="flex-1 py-2 text-xs border rounded transition-all font-bold">{{ __('Sim') }}</button>
+                                        <button type="button" @click="setBuyerEligible(2, false)" :class="!buyer2Eligible ? 'bg-gray-200 text-gray-800 border-gray-300' : 'bg-white text-gray-500 border-gray-300'" class="flex-1 py-2 text-xs border rounded transition-all font-bold">{{ __('Não') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +149,7 @@
 
                 <div class="mt-8 pt-6 border-t border-gray-100">
                     <button @click="scrollToResults" class="w-full bg-brand-cta text-white font-bold uppercase tracking-[0.2em] py-4 rounded shadow-lg hover:bg-brand-primary transition-all transform hover:-translate-y-1 text-xs">
-                        Calcular Impostos
+                        {{ __('Calcular Impostos') }}
                     </button>
                 </div>
 
@@ -164,22 +164,22 @@
                         {{-- Detalhes Toggle --}}
                         <div class="absolute top-4 right-4 z-20">
                             <button @click="showBreakdown = !showBreakdown" class="text-[10px] uppercase tracking-widest text-gray-400 hover:text-white transition flex items-center gap-1">
-                                <span x-text="showBreakdown ? 'Ocultar' : 'Ver Detalhes'"></span>
+                                <span x-text="showBreakdown ? '{{ __('Ocultar') }}' : '{{ __('Ver Detalhes') }}'"></span>
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </button>
                         </div>
 
-                        <h3 class="text-2xl font-serif text-brand-gold mb-6">Custos Fiscais</h3>
+                        <h3 class="text-2xl font-serif text-brand-gold mb-6">{{ __('Custos Fiscais') }}</h3>
 
                         {{-- Breakdown --}}
                         <div x-show="showBreakdown" x-transition class="bg-white/5 p-4 rounded mb-6 text-xs border border-white/10">
                             <div class="space-y-2 text-gray-300">
                                 <div class="flex justify-between">
-                                    <span>Valor Tributável</span>
+                                    <span>{{ __('Valor Tributável') }}</span>
                                     <span class="font-bold text-white">€ <span x-text="formatMoney(imtBreakdown.taxableValue)"></span></span>
                                 </div>
                                 <div class="flex justify-between border-b border-white/10 pb-2 mb-2">
-                                    <span>Quota Parte</span>
+                                    <span>{{ __('Quota Parte') }}</span>
                                     <span class="font-bold text-white">1/<span x-text="buyersCount"></span></span>
                                 </div>
                                 
@@ -187,7 +187,7 @@
                                 
                                 <template x-if="imtBreakdown.isMarginal">
                                     <div class="p-2 bg-brand-cta/20 rounded border border-brand-cta/30 text-brand-cta mb-2">
-                                        IMT Jovem: Taxa de 8% aplicada apenas sobre o valor que excede <span x-text="formatMoney(imtBreakdown.marginalExemption) + '€'"></span>.
+                                        {{ __('IMT Jovem: Taxa de 8% aplicada apenas sobre o valor que excede') }} <span x-text="formatMoney(imtBreakdown.marginalExemption) + '€'"></span>.
                                     </div>
                                 </template>
                             </div>
@@ -196,17 +196,17 @@
                         {{-- Totais --}}
                         <div class="space-y-4">
                             <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-400 uppercase tracking-wide">IMT Total</span>
+                                <span class="text-sm text-gray-400 uppercase tracking-wide">{{ __('IMT Total') }}</span>
                                 <span class="text-xl font-bold">€ <span x-text="formatMoney(finalIMT)"></span></span>
                             </div>
                             
                             <div class="flex justify-between items-center border-b border-white/10 pb-4">
-                                <span class="text-sm text-gray-400 uppercase tracking-wide">Imposto Selo (0.8%)</span>
+                                <span class="text-sm text-gray-400 uppercase tracking-wide">{{ __('Imposto Selo (0.8%)') }}</span>
                                 <span class="text-xl font-bold">€ <span x-text="formatMoney(finalStamp)"></span></span>
                             </div>
 
                             <div class="pt-2">
-                                <p class="text-[10px] uppercase tracking-widest text-brand-premium mb-1">Total a Pagar ao Estado</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-premium mb-1">{{ __('Total a Pagar ao Estado') }}</p>
                                 <p class="text-5xl font-didot text-white">€ <span x-text="formatMoney(totalPayable)"></span></p>
                             </div>
                         </div>
@@ -214,10 +214,10 @@
 
                     {{-- CTA --}}
                     <div class="bg-white p-6 rounded shadow-sm border border-gray-100 text-center">
-                        <p class="text-sm font-bold text-brand-primary mb-2">Planeie o seu investimento</p>
-                        <p class="text-xs text-gray-500 mb-4">Sabendo o custo fiscal, descubra agora a melhor solução de financiamento.</p>
+                        <p class="text-sm font-bold text-brand-primary mb-2">{{ __('Planeie o seu investimento') }}</p>
+                        <p class="text-xs text-gray-500 mb-4">{{ __('Sabendo o custo fiscal, descubra agora a melhor solução de financiamento.') }}</p>
                         <a href="{{ route('tools.credit') }}" class="block w-full border border-brand-primary text-brand-primary font-bold uppercase tracking-widest py-3 rounded hover:bg-brand-primary hover:text-white transition-all text-xs">
-                            Simular Crédito Habitação
+                            {{ __('Simular Crédito Habitação') }}
                         </a>
                     </div>
 
@@ -231,6 +231,11 @@
 <script>
     function imtCalculator() {
         return {
+            i18n: {
+                totalExemption: "{{ __('Isenção Jovem Total') }}",
+                partialExemption: "{{ __('Isenção Jovem Parcial') }}",
+                normalRate: "{{ __('Taxa Normal em Vigor') }}"
+            },
             location: 'continente',
             purpose: 'hpp',
             propertyValue: 300000, 
@@ -358,7 +363,7 @@
                             seloBaseJovem = (valorTotal - limitIsencao) * 0.008;
                         }
                         
-                        imtBreakdownText = valorTotal <= limitIsencao ? 'Isenção Jovem Total' : 'Isenção Jovem Parcial';
+                        imtBreakdownText = valorTotal <= limitIsencao ? this.i18n.totalExemption : this.i18n.partialExemption;
                         this.imtBreakdown.isMarginal = valorTotal > limitIsencao;
                         this.imtBreakdown.marginalExemption = limitIsencao;
                     }
@@ -389,7 +394,7 @@
                 this.finalStamp = finalStamp;
                 this.totalPayable = finalIMT + finalStamp;
 
-                this.imtBreakdown.rateText = imtBreakdownText || 'Taxa Normal em Vigor';
+                this.imtBreakdown.rateText = imtBreakdownText || this.i18n.normalRate;
                 this.imtBreakdown.taxableValue = valorTotal;
                 this.imtBreakdown.finalIMT = finalIMT;
             }

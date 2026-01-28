@@ -27,20 +27,19 @@
          x-transition:leave="transition ease-in duration-300"
          x-transition:leave-start="translate-y-0 opacity-100"
          x-transition:leave-end="translate-y-full opacity-0"
-         {{-- Aumentado o Z-Index para 100 para garantir clique acima do botão de WhatsApp (z-40) --}}
          class="fixed bottom-0 left-0 w-full z-[100] bg-brand-secondary/95 backdrop-blur-md border-t border-brand-accent/30 p-6 md:p-8 shadow-[0_-10px_40px_rgba(0,0,0,0.4)]">
         
         <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="text-center md:text-left flex-1">
                 <p class="text-sm text-white/90 leading-relaxed font-light">
-                    Na <strong>Intellectus | Rui Moita Private Office</strong>, a privacidade é um ativo fundamental. Utilizamos cookies para garantir a segurança da sua navegação. Ao continuar, aceita a nossa 
-                    <button @click="showPrivacyModal = true" class="text-brand-accent hover:text-white underline decoration-brand-accent/50 hover:decoration-white transition-all font-medium">Política de Privacidade & Compliance</button>.
+                    {{ __('Na Intellectus | Rui Moita Private Office, a privacidade é um ativo fundamental. Utilizamos cookies para garantir a segurança da sua navegação. Ao continuar, aceita a nossa') }} 
+                    <button @click="showPrivacyModal = true" class="text-brand-accent hover:text-white underline decoration-brand-accent/50 hover:decoration-white transition-all font-medium">{{ __('Política de Privacidade & Compliance') }}</button>.
                 </p>
             </div>
             <div class="flex gap-4 w-full md:w-auto">
                 {{-- No mobile, o botão agora ocupa largura total para facilitar o toque --}}
                 <button @click="acceptCookies()" class="w-full md:w-auto px-8 py-4 md:py-3 bg-brand-accent text-brand-secondary text-xs font-bold uppercase tracking-widest hover:bg-white transition-all duration-300 rounded-sm whitespace-nowrap shadow-lg">
-                    Aceitar
+                    {{ __('Aceitar') }}
                 </button>
             </div>
         </div>
@@ -66,8 +65,8 @@
             <div class="bg-gray-50 border-b border-gray-200 px-8 pt-8 pb-0 flex-none">
                 <div class="flex justify-between items-start mb-6">
                     <div>
-                        <h2 class="text-2xl font-serif text-brand-secondary">Legal & Compliance</h2>
-                        <p class="text-xs text-brand-primary uppercase tracking-widest mt-1">Rui Moita Private Office</p>
+                        <h2 class="text-2xl font-serif text-brand-secondary">{{ __('Legal & Compliance') }}</h2>
+                        <p class="text-xs text-brand-primary uppercase tracking-widest mt-1">{{ __('Rui Moita Private Office') }}</p>
                     </div>
                     <button @click="showPrivacyModal = false" class="text-gray-400 hover:text-brand-secondary transition-colors p-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -78,17 +77,17 @@
                     <button @click="activeTab = 'privacy'" 
                             :class="activeTab === 'privacy' ? 'border-brand-secondary text-brand-secondary' : 'border-transparent text-gray-400 hover:text-gray-600'"
                             class="pb-4 border-b-2 text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 whitespace-nowrap">
-                        Política de Privacidade
+                        {{ __('Política de Privacidade') }}
                     </button>
                     <button @click="activeTab = 'cookies'" 
                             :class="activeTab === 'cookies' ? 'border-brand-secondary text-brand-secondary' : 'border-transparent text-gray-400 hover:text-gray-600'"
                             class="pb-4 border-b-2 text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 whitespace-nowrap">
-                        Política de Cookies
+                        {{ __('Política de Cookies') }}
                     </button>
                     <button @click="activeTab = 'ral'" 
                             :class="activeTab === 'ral' ? 'border-brand-secondary text-brand-secondary' : 'border-transparent text-gray-400 hover:text-gray-600'"
                             class="pb-4 border-b-2 text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 whitespace-nowrap">
-                        Resolução de Litígios (RAL)
+                        {{ __('Resolução de Litígios (RAL)') }}
                     </button>
                 </div>
             </div>
@@ -96,27 +95,27 @@
             {{-- Conteúdo (Scrollable) --}}
             <div class="flex-1 overflow-y-auto p-8 md:p-12 bg-white scrollbar-thin scrollbar-thumb-gray-200">
                 <div x-show="activeTab === 'privacy'" class="prose prose-sm max-w-none text-gray-600 font-light text-justify">
-                    <p>A <strong>Intellectus Private Office</strong>, com escritório em Lisboa, Portugal, é a entidade responsável pela gestão deste domínio.</p>
-                    <p>Estamos empenhados em proteger a privacidade e os dados pessoais dos nossos clientes, em conformidade com o RGPD.</p>
-                    <h3 class="text-brand-secondary font-serif font-bold mt-8 mb-2 text-lg">Tratamento de Dados</h3>
-                    <p>Os dados recolhidos (nome, email, telefone) destinam-se exclusivamente à gestão de pedidos de consultoria e cumprimento de obrigações legais.</p>
+                    <p>{!! __('A <strong>Intellectus Private Office</strong>, com escritório em Lisboa, Portugal, é a entidade responsável pela gestão deste domínio.') !!}</p>
+                    <p>{{ __('Estamos empenhados em proteger a privacidade e os dados pessoais dos nossos clientes, em conformidade com o RGPD.') }}</p>
+                    <h3 class="text-brand-secondary font-serif font-bold mt-8 mb-2 text-lg">{{ __('Tratamento de Dados') }}</h3>
+                    <p>{{ __('Os dados recolhidos (nome, email, telefone) destinam-se exclusivamente à gestão de pedidos de consultoria e cumprimento de obrigações legais.') }}</p>
                 </div>
 
                 <div x-show="activeTab === 'cookies'" style="display: none;" class="prose prose-sm max-w-none text-gray-600 font-light text-justify">
-                    <h3 class="text-brand-secondary font-serif font-bold mt-0 mb-2 text-lg">Política de Cookies</h3>
-                    <p>Utilizamos cookies estritamente necessários para o funcionamento e segurança do site (CSRF, gestão de sessão).</p>
+                    <h3 class="text-brand-secondary font-serif font-bold mt-0 mb-2 text-lg">{{ __('Política de Cookies') }}</h3>
+                    <p>{{ __('Utilizamos cookies estritamente necessários para o funcionamento e segurança do site (CSRF, gestão de sessão).') }}</p>
                 </div>
 
                 <div x-show="activeTab === 'ral'" style="display: none;" class="prose prose-sm max-w-none text-gray-600 font-light text-justify">
-                    <h3 class="text-brand-secondary font-serif font-bold mt-0 mb-4 text-lg">RAL</h3>
-                    <p>Em caso de litígio, o cliente pode recorrer ao CNIACC (www.cniacc.pt).</p>
+                    <h3 class="text-brand-secondary font-serif font-bold mt-0 mb-4 text-lg">{{ __('RAL') }}</h3>
+                    <p>{{ __('Em caso de litígio, o cliente pode recorrer ao CNIACC (www.cniacc.pt).') }}</p>
                 </div>
             </div>
 
             {{-- Footer do Modal --}}
             <div class="bg-gray-50 border-t border-gray-200 p-6 flex justify-end flex-none">
                 <button @click="acceptCookies()" class="w-full md:w-auto px-8 py-3 bg-brand-secondary text-white text-[10px] font-bold uppercase tracking-widest hover:bg-brand-primary transition-all duration-300 rounded-sm shadow-lg">
-                    Li e Aceito
+                    {{ __('Li e Aceito') }}
                 </button>
             </div>
         </div>
