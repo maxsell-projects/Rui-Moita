@@ -4,11 +4,14 @@
 
 @section('content')
 
-{{-- HERO SECTION: EDITORIAL (Verde Inglês) --}}
-<section class="bg-brand-secondary text-white py-32 text-center relative overflow-hidden">
+{{-- HERO SECTION: EDITORIAL (Agora com Azul Primary para contraste e mais espaço no topo) --}}
+<section class="bg-brand-primary text-white pt-52 pb-32 text-center relative overflow-hidden">
     {{-- Padrão de Fundo Sutil --}}
-    <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+    <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
     
+    {{-- Gradiente Decorativo para dar profundidade --}}
+    <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none"></div>
+
     <div class="container mx-auto px-6 relative z-10" data-aos="fade-up">
         <p class="text-brand-sand font-mono text-xs uppercase tracking-[0.4em] mb-6 flex justify-center items-center gap-3">
             <span class="w-6 h-[1px] bg-brand-sand"></span>
@@ -25,9 +28,9 @@
     <div class="container mx-auto px-6">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
             
-            {{-- SIDEBAR DE FILTROS (Sticky) --}}
+            {{-- SIDEBAR DE FILTROS (Sticky ajustado para não bater no header) --}}
             <aside class="lg:col-span-1">
-                <div class="bg-white p-8 shadow-xl border-t-4 border-brand-primary sticky top-32" data-aos="fade-right">
+                <div class="bg-white p-8 shadow-xl border-t-4 border-brand-primary sticky top-40" data-aos="fade-right">
                     <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
                         <h3 class="font-serif text-xl text-brand-secondary">{{ __('Refinar Busca') }}</h3>
                         <a href="{{ route('portfolio') }}" class="text-[10px] text-gray-400 uppercase hover:text-brand-primary tracking-widest transition-colors">

@@ -1,25 +1,13 @@
 <footer class="bg-brand-secondary text-white pt-24 pb-12 border-t border-brand-sand/10 relative overflow-hidden font-sans">
     
-    {{-- Marca d'água decorativa (Azul sobre Azul) --}}
+    {{-- Marca d'água decorativa (Mantida para elegância de fundo) --}}
     <div class="absolute -top-20 -right-20 p-0 opacity-[0.02] pointer-events-none select-none">
         <span class="font-serif text-[20rem] leading-none text-white">RM</span>
     </div>
 
     <div class="container mx-auto px-6 relative z-10">
         
-        {{-- TOP SECTION: Brand & Slogan --}}
-        <div class="flex flex-col md:flex-row justify-between items-start border-b border-white/5 pb-16 mb-16 gap-12">
-            <div class="max-w-md">
-                <a href="{{ route('home') }}" class="block mb-6 group">
-                    <span class="font-serif text-3xl text-white tracking-wide block">INTELLECTUS</span>
-                    <span class="text-[9px] uppercase tracking-[0.4em] text-brand-accent group-hover:text-white transition-colors">Rui Moita Private Office</span>
-                </a>
-                <p class="text-white/60 font-light leading-relaxed text-sm">
-                    {{ __('Consultoria imobiliária independente especializada em ativos de investimento e propriedades de luxo.') }}
-                    <br><span class="italic text-white/80">{{ __('Rigor, Discrição e Estratégia.') }}</span>
-                </p>
-            </div>
-        </div>
+        {{-- TOP SECTION REMOVIDA AQUI --}}
 
         {{-- MAIN GRID --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">

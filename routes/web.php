@@ -13,6 +13,9 @@ use App\Http\Controllers\AdminConsultantController;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes - José Carvalho Real Estate
@@ -20,6 +23,8 @@ use Illuminate\Support\Facades\App;
 */
 
 // --- HOME & INSTITUCIONAL ---
+
+
 
 
 Route::get('lang/{locale}', function ($locale) {
@@ -124,3 +129,4 @@ Route::prefix('admin')->group(function () {
         Route::resource('consultants', AdminConsultantController::class)->names('admin.consultants');
     });
 });
+
