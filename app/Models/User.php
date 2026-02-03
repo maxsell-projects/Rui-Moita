@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        // Novos campos para o controle de acesso (Off-Market)
+        'role',              // admin, client, developer
+        'status',            // pending, active, suspended
+        'market_access',     // boolean: tem acesso ao off-market?
+        'access_expires_at', // validade do acesso
     ];
 
     /**
@@ -43,6 +48,47 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            // Novos casts
+            'market_access' => 'boolean',
+            'access_expires_at' => 'datetime',
         ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helper Methods (Lógica de Acesso)
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Verifica se o utilizador é Administrador
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Verifica se o utilizador tem conta Ativa
+     */
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    /**
+     * Lógica Central: Verifica se tem acesso ao Off-Market
+     * Regra: Precisa estar ativo + ter flag true + data válida (ou nula/vitalícia)
+     */
+    public function hasMarketAccess(): bool
+    {
+        // Se for admin, tem sempre acesso
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        return $this->isActive() 
+            && $this->market_access 
+            && ($this->access_expires_at === null || $this->access_expires_at->isFuture());
     }
 }

@@ -10,11 +10,9 @@ use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\RecruitmentController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\AdminConsultantController;
+use App\Http\Controllers\AccessRequestController; // <--- Importado
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
-
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +21,6 @@ use Illuminate\Support\Facades\App;
 */
 
 // --- HOME & INSTITUCIONAL ---
-
-
-
 
 Route::get('lang/{locale}', function ($locale) {
     // Valida se o idioma é suportado para evitar erros
@@ -62,6 +57,11 @@ Route::get('/contactos', function () {
 
 // Processamento do Formulário (SOP Compliance)
 Route::post('/contactos/enviar', [ContactController::class, 'send'])->name('contact.send');
+
+
+// --- OFF-MARKET ACCESS (Solicitação Pública) ---
+// Rota onde o formulário "Pedir Acesso" vai bater
+Route::post('/access-request', [AccessRequestController::class, 'store'])->name('access-request.store');
 
 
 // --- RECRUTAMENTO (Carreiras) ---
@@ -127,6 +127,14 @@ Route::prefix('admin')->group(function () {
 
         // [NOVO] Gestão de Equipa (Consultores)
         Route::resource('consultants', AdminConsultantController::class)->names('admin.consultants');
+
+        // [NOVO] Gestão de Pedidos de Acesso (Off-Market)
+        // Lista e Detalhe
+        Route::get('/access-requests', [AccessRequestController::class, 'index'])->name('admin.access-requests');
+        Route::get('/access-requests/{accessRequest}', [AccessRequestController::class, 'show'])->name('admin.access-requests.show');
+        
+        // Ações de Aprovação/Rejeição
+        Route::patch('/access-requests/{accessRequest}/approve', [AccessRequestController::class, 'approve'])->name('admin.access-requests.approve');
+        Route::patch('/access-requests/{accessRequest}/reject', [AccessRequestController::class, 'reject'])->name('admin.access-requests.reject');
     });
 });
-
