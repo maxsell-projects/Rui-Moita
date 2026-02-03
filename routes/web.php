@@ -1,119 +1,145 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
-
-// Controllers do Rui Moita (Funcionalidades Específicas)
-use App\Http\Controllers\PropertyController;
-use App\Http\Controllers\ToolsController;
-use App\Http\Controllers\ContactController;
-use App\Http\Controllers\Api\ChatbotController;
-use App\Http\Controllers\RecruitmentController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\AdminConsultantController; // Controller adaptado
-
-// Controllers da Crow (Auth, Dashboard e Acessos)
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DeveloperController;
+use App\Http\Controllers\LegalController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ToolsController;
+use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\AccessRequestController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes - José Carvalho Real Estate
+| Web Routes (CORRIGIDO)
 |--------------------------------------------------------------------------
 */
 
-// ========================================================================
-// 1. ÁREA PÚBLICA (FRONT-END RUI MOITA)
-// ========================================================================
+// 1. Home & Institucional (Público)
+Route::get('/', [PageController::class, 'home'])->name('home');
 
-// Troca de Idioma
-Route::get('lang/{locale}', function ($locale) {
-    if (in_array($locale, ['pt', 'en', 'fr'])) {
-        Session::put('locale', $locale);
-    }
-    return back();
-})->name('lang.switch');
+// Chatbot AI
+Route::post('/chatbot/send', [ChatbotController::class, 'sendMessage'])
+    ->name('chatbot.send')
+    ->middleware(['web']);
 
-// Home Page
-Route::get('/', function () {
-    $properties = \App\Models\Property::where('is_visible', true)
-        ->where('is_featured', true)
-        ->latest()
-        ->take(3)
-        ->get();
-    return view('home', compact('properties'));
-})->name('home');
+// Troca de idioma
+Route::get('language/{locale}', function ($locale) {
+    if (! in_array($locale, ['en', 'pt', 'fr'])) abort(400);
+    session(['locale' => $locale]);
+    return redirect()->back()->withCookie(cookie('crow_locale', $locale, 525600));
+})->name('language.switch');
 
-// Páginas Institucionais
-Route::get('/sobre', function () { return view('about'); })->name('about');
-Route::get('/equipa', [PageController::class, 'team'])->name('team');
+// Páginas Estáticas
+Route::controller(PageController::class)->group(function () {
+    Route::get('/about', 'about')->name('pages.about');
+    Route::get('/services', 'services')->name('pages.services');
+    Route::get('/sell-with-us', 'sell')->name('pages.sell');
+    Route::get('/contact', 'contact')->name('pages.contact');
+    Route::get('/simulators', 'simulators')->name('pages.simulators');
+});
 
-// Contactos & Leads
-Route::get('/contactos', function () { return view('contact'); })->name('contact');
-Route::post('/contactos/enviar', [ContactController::class, 'send'])->name('contact.send');
+// Ferramentas & Simuladores
+Route::controller(ToolsController::class)->group(function () {
+    Route::get('/simulators/capital-gains', 'showGainsSimulator')->name('tools.gains');
+    Route::post('/simulators/capital-gains/calculate', 'calculateGains')->name('tools.gains.calculate');
+    Route::get('/simulators/credit', 'showCreditSimulator')->name('tools.credit');
+    Route::post('/simulators/credit/send', 'sendCreditSimulation')->name('tools.credit.send');
+    Route::get('/simulators/imt', 'showImtSimulator')->name('tools.imt');
+    Route::post('/simulators/imt/send', 'sendImtSimulation')->name('tools.imt.send');
+    Route::post('/contact/send', 'sendContact')->name('contact.send');
+});
 
-// Off-Market (Formulário Público de Solicitação)
+// Imóveis (Listagem Pública)
+Route::get('/properties', [PropertyController::class, 'index'])->name('properties.index');
+
+// Formulários Públicos (Lead Generation)
+// NOTA: Definimos estas rotas específicas ANTES da rota genérica 'show'
+Route::post('/properties/{property}/visit', [PropertyController::class, 'sendVisitRequest'])->name('properties.visit');
+Route::post('/properties/{property}/contact', [PropertyController::class, 'sendContact'])->name('properties.contact');
 Route::post('/access-request', [AccessRequestController::class, 'store'])->name('access-request.store');
 
-// Recrutamento
-Route::get('/recrutamento', [PageController::class, 'recruitment'])->name('recruitment');
-Route::post('/recrutamento/enviar', [RecruitmentController::class, 'submit'])->name('recruitment.submit');
+// Legal
+Route::controller(LegalController::class)->group(function () {
+    Route::get('/privacy-policy', 'privacy')->name('legal.privacy');
+    Route::get('/terms-of-service', 'terms')->name('legal.terms');
+    Route::get('/cookies-policy', 'cookies')->name('legal.cookies');
+    Route::get('/legal-notice', 'notice')->name('legal.notice');
+});
 
-// Portfólio de Imóveis (Público)
-Route::get('/imoveis', [PropertyController::class, 'publicIndex'])->name('portfolio');
-Route::get('/imoveis/{property:slug}', [PropertyController::class, 'show'])->name('properties.show');
-
-// Ferramentas (Simuladores)
-Route::get('/ferramentas/simulador-credito', function () { return view('tools.credit'); })->name('tools.credit');
-Route::get('/ferramentas/imt', function () { return view('tools.imt'); })->name('tools.imt');
-Route::get('/ferramentas/mais-valias', [ToolsController::class, 'showGainsSimulator'])->name('tools.gains');
-Route::post('/ferramentas/mais-valias/calcular', [ToolsController::class, 'calculateGains'])->name('tools.gains.calculate');
-
-// Legal & Chatbot
-Route::get('/termos-e-condicoes', function () { return view('legal.terms'); })->name('terms');
-Route::post('/chatbot/send', [ChatbotController::class, 'sendMessage'])->name('chatbot.send');
-
-
-// ========================================================================
-// 2. ÁREA PRIVADA / BACKOFFICE (SISTEMA CROW + CONSULTORES)
-// ========================================================================
-
-// Grupo protegido por Login (auth) e Validação de Acesso (active_access)
+// 2. Área Autenticada
 Route::middleware(['auth', 'active_access'])->group(function () {
+    
+    Route::get('/dashboard', function () {
+        $user = auth()->user();
+        if ($user->isAdmin()) return redirect()->route('admin.dashboard');
+        
+        $exclusiveProperties = collect([]);
+        if ($user->role === 'client' || $user->role === 'developer') {
+            $exclusiveProperties = App\Models\Property::where('is_exclusive', true)
+                                         ->where('status', 'active')
+                                         ->limit(3)
+                                         ->get(); 
+        }
+        return view('dashboard', compact('exclusiveProperties'));
+    })->name('dashboard');
 
-    // --- Perfil do Utilizador ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // --- Área Admin (Prefixo /admin) ---
-    Route::prefix('admin')->group(function () {
+    // Gestão de Imóveis (Developer & Admin)
+    Route::middleware('can:manageProperties,App\Models\User')->group(function () {
+        // ROTAS ESPECÍFICAS PRIMEIRO
+        Route::get('/my-properties', [PropertyController::class, 'myProperties'])->name('properties.my');
+        Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create'); // <--- AQUI ESTAVA O CONFLITO
+        Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
         
-        // Dashboard Principal (Visualização Geral)
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
+        Route::patch('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
+        Route::delete('/properties/{property}', [PropertyController::class, 'destroy'])->name('properties.destroy');
 
-        // Gestão de Imóveis (CRUD)
-        Route::resource('properties', PropertyController::class)->names('admin.properties');
+        Route::get('/my-clients', [DeveloperController::class, 'index'])->name('developer.clients');
+        Route::post('/my-clients', [DeveloperController::class, 'store'])->name('developer.clients.store');
+        Route::patch('/my-clients/{client}/toggle', [DeveloperController::class, 'toggleClientStatus'])->name('developer.clients.toggle');
+        Route::patch('/my-clients/{client}/toggle-market', [DeveloperController::class, 'toggleMarketAccess'])->name('developer.clients.toggle-market');
+        Route::patch('/my-clients/{client}/reset-password', [DeveloperController::class, 'resetClientPassword'])->name('developer.clients.reset-password');
+        Route::delete('/my-clients/{client}', [DeveloperController::class, 'destroy'])->name('developer.clients.destroy');
+        
+        Route::get('/properties/{property}/access-list', [PropertyController::class, 'getAccessList'])->name('properties.access-list');
+        Route::post('/properties/{property}/access', [DeveloperController::class, 'toggleAccess'])->name('properties.access');
+    });
 
-        // --- Funcionalidades Exclusivas de ADMIN (Middleware 'admin') ---
-        Route::middleware(['admin'])->group(function () {
-            
-            // 1. Gestão de Acessos Off-Market (Crow Logic)
-            Route::get('/access-requests', [AccessRequestController::class, 'index'])->name('admin.access-requests');
-            Route::get('/access-requests/{accessRequest}', [AccessRequestController::class, 'show'])->name('admin.access-requests.show');
-            Route::patch('/access-requests/{accessRequest}/approve', [AccessRequestController::class, 'approve'])->name('admin.access-requests.approve');
-            Route::patch('/access-requests/{accessRequest}/reject', [AccessRequestController::class, 'reject'])->name('admin.access-requests.reject');
+    // ADMIN
+    Route::middleware('can:isAdmin,App\Models\User')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        
+        Route::get('/access-requests', [AccessRequestController::class, 'index'])->name('access-requests');
+        Route::get('/access-requests/{accessRequest}', [AccessRequestController::class, 'show'])->name('access-requests.show');
+        Route::patch('/access-requests/{accessRequest}/approve', [AccessRequestController::class, 'approve'])->name('access-requests.approve');
+        Route::patch('/access-requests/{accessRequest}/reject', [AccessRequestController::class, 'reject'])->name('access-requests.reject');
+        
+        Route::get('/exclusive-requests', [AdminController::class, 'exclusiveRequests'])->name('exclusive-requests');
+        Route::patch('/exclusive-requests/{user}/approve', [AdminController::class, 'approveExclusiveRequest'])->name('exclusive-requests.approve');
+        Route::delete('/exclusive-requests/{user}/reject', [AdminController::class, 'rejectExclusiveRequest'])->name('exclusive-requests.reject');
 
-            // 2. Gestão de Equipa / Consultores (Rui Moita Logic)
-            // Adaptado para rodar dentro da segurança da Crow
-            Route::resource('consultants', AdminConsultantController::class)->names('admin.consultants');
-        });
+        Route::get('/properties/pending', [AdminController::class, 'pendingProperties'])->name('properties.pending');
+        Route::patch('/properties/{property}/approve-listing', [PropertyController::class, 'approve'])->name('properties.approve-listing');
+        Route::patch('/properties/{property}/reject-listing', [PropertyController::class, 'reject'])->name('properties.reject-listing');
+
+        Route::patch('/users/{user}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
+        Route::patch('/users/{user}/reset-password', [AdminController::class, 'resetUserPassword'])->name('users.reset-password');
+        Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.delete');
+
+        Route::get('/properties', [AdminController::class, 'properties'])->name('properties');
+        Route::delete('/properties/{property}', [AdminController::class, 'deleteProperty'])->name('properties.destroy');
     });
 });
 
-// ========================================================================
-// 3. ROTAS DE AUTENTICAÇÃO (SISTEMA CROW)
-// ========================================================================
-// Certifique-se de ter copiado o arquivo 'routes/auth.php' da Crow para o Rui
+// 3. Rota Genérica (WILDCARD) - SEMPRE NO FINAL
+// Se colocarmos antes, ela "engole" a rota /properties/create achando que 'create' é um ID.
+Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
+
 require __DIR__.'/auth.php';

@@ -3,232 +3,323 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
-use App\Models\PropertyImage;
-use App\Models\Consultant;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\VisitRequestMail;
+use App\Mail\PropertyApprovedMail;
 
 class PropertyController extends Controller
 {
-    /**
-     * Listagem Administrativa com Filtros
-     */
     public function index(Request $request)
     {
-        $query = Property::with('consultant');
-
-        // Filtro: Status de Visibilidade (Ativo/Oculto)
-        if ($request->filled('visibility')) {
-            $query->where('is_visible', $request->visibility === 'active');
+        if (Auth::check()) {
+            // Assume que o scopeVisibleForUser existe no Model
+            $query = Property::visibleForUser(Auth::user());
+        } else {
+            $query = Property::where('status', 'active')
+                             ->where('is_exclusive', false);
         }
 
-        // Filtro: Objetivo (Venda/Arrendamento)
-        // Mapeamos os termos comuns para os valores do banco
-        if ($request->filled('intent')) {
-            $intent = $request->intent === 'rent' ? 'rent' : 'available';
-            $query->where('status', $intent);
+        // Seus filtros (Scopes)
+        if ($request->filled('city')) $query->byCity($request->city);
+        if ($request->filled('type')) $query->byType($request->type);
+        if ($request->filled('transaction_type')) $query->byTransactionType($request->transaction_type);
+        if ($request->filled('bedrooms')) $query->byBedrooms($request->bedrooms);
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->byPriceRange($request->min_price, $request->max_price);
         }
 
-        // [BÓNUS] Filtro por Código de Referência ou Título
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('reference_code', 'like', "%{$search}%")
-                  ->orWhere('title', 'like', "%{$search}%");
-            });
-        }
-
-        $properties = $query->latest()->paginate(10)->withQueryString();
-        
-        return view('admin.properties.index', compact('properties'));
-    }
-
-    public function create()
-    {
-        $consultants = Consultant::where('is_active', true)->orderBy('name')->get();
-        return view('admin.properties.create', compact('consultants'));
-    }
-
-    public function store(Request $request)
-    {
-        $data = $this->validateProperty($request);
-        $data['slug'] = Str::slug($data['title']) . '-' . time();
-        
-        if (auth()->check()) {
-            $data['user_id'] = auth()->id();
-        }
-
-        $data = $this->mapCheckboxes($request, $data);
-
-        if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('properties', 'public');
-        }
-
-        $property = Property::create($data);
-        $this->handleGalleryUpload($request, $property);
-
-        return redirect()->route('admin.properties.index')->with('success', 'Imóvel cadastrado com sucesso!');
-    }
-
-    public function edit(Property $property)
-    {
-        $consultants = Consultant::where('is_active', true)->orderBy('name')->get();
-        return view('admin.properties.edit', compact('property', 'consultants'));
-    }
-
-    public function update(Request $request, Property $property)
-    {
-        $data = $this->validateProperty($request, $property);
-
-        if ($property->title !== $data['title']) {
-            $data['slug'] = Str::slug($data['title']) . '-' . time();
-        }
-
-        $data = $this->mapCheckboxes($request, $data);
-
-        if ($request->hasFile('cover_image')) {
-            if ($property->cover_image) {
-                Storage::disk('public')->delete($property->cover_image);
-            }
-            $data['cover_image'] = $request->file('cover_image')->store('properties', 'public');
-        }
-
-        $property->update($data);
-        $this->handleGalleryUpload($request, $property);
-
-        return redirect()->route('admin.properties.index')->with('success', 'Imóvel atualizado com sucesso!');
-    }
-
-    public function destroy(Property $property)
-    {
-        if ($property->cover_image) {
-            Storage::disk('public')->delete($property->cover_image);
-        }
-        
-        foreach ($property->images as $image) {
-            Storage::disk('public')->delete($image->path);
-        }
-        
-        $property->delete();
-        return back()->with('success', 'Imóvel removido.');
-    }
-
-    /**
-     * Listagem Pública (Filtros refinados para o site)
-     */
-    public function publicIndex(Request $request)
-    {
-        $query = Property::with(['images', 'consultant'])->where('is_visible', true);
-
-        // Localização / Busca Geral
-        if ($request->filled('location')) {
-            $search = $request->location;
-            $query->where(function($q) use ($search) {
-                $q->where('location', 'like', "%{$search}%")
-                  ->orWhere('city', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%")
-                  ->orWhere('reference_code', 'like', "%{$search}%");
-            });
-        }
-
-        // Refinamento de Status (Venda vs Arrendamento)
-        if ($request->filled('status')) {
-            $statusMap = [
-                'venda' => 'available',
-                'arrendamento' => 'rent',
-                'aluguer' => 'rent'
-            ];
-            $status = $statusMap[strtolower($request->status)] ?? $request->status;
-            $query->where('status', $status);
-        }
-
-        // Filtro de Tipo de Imóvel
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        // Preços e Tipologias
-        if ($request->filled('price_min')) $query->where('price', '>=', $request->price_min);
-        if ($request->filled('price_max')) $query->where('price', '<=', $request->price_max);
-
-        if ($request->filled('bedrooms')) {
-            $request->bedrooms === '4+' 
-                ? $query->where('bedrooms', '>=', 4) 
-                : $query->where('bedrooms', (int)$request->bedrooms);
-        }
-
-        $properties = $query->latest()->paginate(9)->withQueryString();
+        $query->orderBy('is_featured', 'desc')->orderBy('published_at', 'desc');
+        $properties = $query->paginate(12);
 
         return view('properties.index', compact('properties'));
     }
 
+    public function create()
+    {
+        if (!Auth::user()->canManageProperties()) abort(403);
+        return view('properties.create');
+    }
+
+    public function store(Request $request)
+    {
+        if (!Auth::user()->canManageProperties()) abort(403);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'type' => 'required|in:apartment,house,villa,land,commercial,office',
+            'transaction_type' => 'required|in:sale,rent',
+            'condition' => 'nullable|in:new,used,renovated,under_construction',
+            'price' => 'required|numeric|min:0',
+            'city' => 'required|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'address' => 'required|string|max:255',
+            'postal_code' => 'nullable|string|max:20',
+            'bedrooms' => 'nullable|integer|min:0',
+            'bathrooms' => 'nullable|integer|min:0',
+            'area' => 'nullable|numeric|min:0',
+            'land_area' => 'nullable|numeric|min:0',
+            'year_built' => 'nullable|integer|min:1800|max:' . date('Y'),
+            'energy_rating' => 'nullable|string|max:5',
+            'video_url' => ['nullable', 'url', 'regex:/(youtube\.com|youtu\.be|vimeo\.com)/'],
+            'whatsapp' => 'nullable|string|max:20',
+            'features' => 'nullable|array',
+            'is_exclusive' => 'nullable|boolean',
+        ]);
+
+        // Upload Cover
+        if ($request->hasFile('cover_image')) {
+            $validated['cover_image'] = $request->file('cover_image')->store('properties/covers', 'public');
+        }
+
+        // Upload Gallery
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imagePaths[] = $image->store('properties/gallery', 'public');
+            }
+        }
+        $validated['images'] = $imagePaths;
+
+        $validated['user_id'] = Auth::id();
+        
+        // Define status
+        $isAdmin = Auth::user()->isAdmin();
+        $validated['status'] = $isAdmin ? 'active' : 'pending_review';
+        
+        $validated['published_at'] = now();
+        $validated['is_exclusive'] = $request->boolean('is_exclusive');
+
+        $property = Property::create($validated);
+
+        // NOTIFICAÇÃO PARA ADMIN (Se quem postou foi Developer)
+        if (!$isAdmin) {
+            try {
+                $adminEmail = 'admin@crow-global.com';
+                Mail::raw("Novo imóvel submetido para revisão:\n\nTítulo: {$property->title}\nPor: " . Auth::user()->name, function($msg) use ($adminEmail) {
+                    $msg->to($adminEmail)->subject('🔔 Novo Imóvel Pendente de Aprovação');
+                });
+            } catch (\Exception $e) {
+                Log::error('Erro ao notificar admin sobre imóvel: ' . $e->getMessage());
+            }
+        }
+
+        $msg = $isAdmin 
+            ? 'Imóvel publicado com sucesso!' 
+            : 'Imóvel enviado para aprovação da administração.';
+
+        return redirect()->route('properties.show', $property)->with('success', $msg);
+    }
+
     public function show(Property $property)
     {
-        $property->load(['images', 'consultant']);
+        // Regra 1: Dono ou Admin vê sempre
+        if (Auth::check() && (Auth::id() === $property->user_id || Auth::user()->isAdmin())) {
+            return view('properties.show', compact('property'));
+        }
+
+        // Regra 2: Verifica visibilidade baseada em regras de negócio (Model)
+        if (Auth::check()) {
+            // Nota: Se o método visibleForUser retornar query builder, precisamos do get() ou exists()
+            // Assumindo que seu código original estava correto na lógica do Model
+            $canView = Property::visibleForUser(Auth::user())->where('id', $property->id)->exists();
+            if (!$canView) abort(403, 'Acesso restrito a este imóvel.');
+        } else {
+            // Visitante não logado
+            if ($property->status !== 'active' || $property->is_exclusive) abort(403, 'Conteúdo restrito. Faça login.');
+        }
+
         return view('properties.show', compact('property'));
     }
 
-    // --- HELPER METHODS ---
-
-    private function validateProperty(Request $request, Property $property = null)
+    public function edit(Property $property)
     {
-        return $request->validate([
-            'reference_code' => [
-                'nullable', 'string', 'max:20',
-                $property ? Rule::unique('properties', 'reference_code')->ignore($property->id) : 'unique:properties,reference_code'
-            ],
-            'consultant_id' => 'nullable|exists:consultants,id',
+        if (!Auth::user()->canManageProperties() || (Auth::id() !== $property->user_id && !Auth::user()->isAdmin())) abort(403);
+        return view('properties.edit', compact('property'));
+    }
+
+    public function update(Request $request, Property $property)
+    {
+        if (!Auth::user()->canManageProperties() || (Auth::id() !== $property->user_id && !Auth::user()->isAdmin())) abort(403);
+
+        $rules = [
             'title' => 'required|string|max:255',
-            'price' => 'nullable|numeric',
-            'type' => 'required|string',
-            'status' => 'required|string',
-            'location' => 'nullable|string',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string',
-            'floor' => 'nullable|string',
-            'orientation' => 'nullable|string',
-            'area_gross' => 'nullable|numeric',
-            'bedrooms' => 'nullable|integer',
-            'bathrooms' => 'nullable|integer',
-            'garages' => 'nullable|integer',
-            'energy_rating' => 'nullable|string',
-            'condition' => 'nullable|string',
-            'video_url' => 'nullable|url',
-            'whatsapp_number' => 'nullable|string',
-            'description' => 'nullable|string',
-            'cover_image' => 'nullable|image|max:20480',
-            'gallery.*' => 'image|max:20480',
-        ]);
-    }
-
-    private function mapCheckboxes(Request $request, array $data)
-    {
-        $features = [
-            'has_pool', 'has_garden', 'has_lift', 'has_terrace', 'has_air_conditioning', 
-            'is_furnished', 'is_kitchen_equipped', 'is_visible', 'is_featured'
+            'description' => 'required|string',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'type' => 'required|in:apartment,house,villa,land,commercial,office',
+            'transaction_type' => 'required|in:sale,rent',
+            'condition' => 'nullable|in:new,used,renovated,under_construction',
+            'price' => 'required|numeric|min:0',
+            'city' => 'required|string|max:255',
+            'district' => 'nullable|string|max:255',
+            'address' => 'required|string|max:255',
+            'postal_code' => 'nullable|string|max:20',
+            'bedrooms' => 'nullable|integer|min:0',
+            'bathrooms' => 'nullable|integer|min:0',
+            'area' => 'nullable|numeric|min:0',
+            'land_area' => 'nullable|numeric|min:0',
+            'year_built' => 'nullable|integer|min:1800|max:' . date('Y'),
+            'energy_rating' => 'nullable|string|max:5',
+            'video_url' => ['nullable', 'url', 'regex:/(youtube\.com|youtu\.be|vimeo\.com)/'],
+            'whatsapp' => 'nullable|string|max:20',
+            'features' => 'nullable|array',
+            'is_exclusive' => 'nullable|boolean',
+            'delete_images' => 'nullable|array',
+            'status' => 'required|in:draft,active,negotiating,sold,pending_review'
         ];
-        
-        foreach ($features as $feature) {
-            $data[$feature] = $request->has($feature);
-        }
-        
-        return $data;
-    }
 
-    private function handleGalleryUpload(Request $request, Property $property)
-    {
-        if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $image) {
-                if ($image->isValid()) {
-                    $path = $image->store('properties/gallery', 'public');
-                    PropertyImage::create([
-                        'property_id' => $property->id,
-                        'path' => $path
-                    ]);
+        $validated = $request->validate($rules);
+
+        // Se não for admin, força pendente ao editar
+        if (!Auth::user()->isAdmin()) {
+             $validated['status'] = 'pending_review';
+        }
+
+        // Update Cover
+        if ($request->hasFile('cover_image')) {
+            if ($property->cover_image) Storage::disk('public')->delete($property->cover_image);
+            $validated['cover_image'] = $request->file('cover_image')->store('properties/covers', 'public');
+        }
+
+        // Logic to Delete specific images from gallery
+        $currentImages = $property->images ?? [];
+        if ($request->filled('delete_images')) {
+            foreach ($request->delete_images as $imageToDelete) {
+                if (($key = array_search($imageToDelete, $currentImages)) !== false) {
+                    Storage::disk('public')->delete($imageToDelete);
+                    unset($currentImages[$key]);
                 }
             }
+            $currentImages = array_values($currentImages);
         }
+
+        // Logic to Add new images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $currentImages[] = $image->store('properties/gallery', 'public');
+            }
+        }
+        $validated['images'] = $currentImages;
+        $validated['is_exclusive'] = $request->boolean('is_exclusive');
+
+        $property->update($validated);
+
+        $msg = (!Auth::user()->isAdmin()) 
+            ? 'Imóvel atualizado e enviado para revisão.' 
+            : 'Imóvel atualizado!';
+
+        return redirect()->route('properties.show', $property)->with('success', $msg);
+    }
+
+    public function destroy(Property $property)
+    {
+        if (!Auth::user()->canManageProperties() || (Auth::id() !== $property->user_id && !Auth::user()->isAdmin())) abort(403);
+        
+        // HARD DELETE: Apagar imagens fisicamente
+        if ($property->cover_image) Storage::disk('public')->delete($property->cover_image);
+        if ($property->images) {
+            foreach ($property->images as $image) Storage::disk('public')->delete($image);
+        }
+        
+        $property->delete();
+        return redirect()->route('properties.index')->with('success', 'Imóvel excluído permanentemente!');
+    }
+
+    // ==========================================
+    // MÉTODOS DE APROVAÇÃO (ADMIN)
+    // ==========================================
+
+    public function approve(Property $property)
+    {
+        if (!Auth::user() || !Auth::user()->isAdmin()) abort(403);
+
+        $property->update(['status' => 'active']);
+
+        // Notifica o dono do imóvel (Developer)
+        try {
+            if ($property->user) {
+                Mail::to($property->user->email)->send(new PropertyApprovedMail($property));
+            }
+        } catch (\Exception $e) {
+            Log::error('Erro ao enviar email de aprovação: ' . $e->getMessage());
+            return back()->with('success', 'Imóvel aprovado, mas o e-mail de notificação falhou.');
+        }
+
+        return back()->with('success', 'Imóvel aprovado e notificação enviada!');
+    }
+
+    public function reject(Property $property)
+    {
+        if (!Auth::user() || !Auth::user()->isAdmin()) abort(403);
+        
+        // Pode mudar para 'draft' ou deletar, dependendo da regra de negócio
+        $property->update(['status' => 'draft']); 
+        
+        // Opcional: Enviar email de rejeição explicando motivo
+        return back()->with('success', 'Imóvel rejeitado (movido para rascunho).');
+    }
+
+    // ==========================================
+    // MÉTODOS AUXILIARES E DE CONTATO
+    // ==========================================
+
+    public function myProperties()
+    {
+        if (!Auth::user()->canManageProperties()) abort(403);
+        $properties = Property::where('user_id', Auth::id())->orderBy('created_at', 'desc')->paginate(12);
+        return view('properties.my-properties', compact('properties'));
+    }
+
+    public function sendVisitRequest(Request $request, Property $property)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:20',
+            'preferred_date' => 'required|string',
+            'message' => 'nullable|string',
+        ]);
+        
+        // Envia para o dono do imóvel ou fallback para o admin
+        $recipient = $property->user->email ?? 'admin@crow-global.com';
+        
+        try {
+            Mail::to($recipient)
+                ->cc('admin@crow-global.com') // Cópia para o Admin sempre saber o que acontece
+                ->send(new VisitRequestMail($property, $validated));
+        } catch (\Exception $e) {
+            Log::error('Erro ao enviar visita: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao enviar e-mail. Tente contato via WhatsApp.');
+        }
+        
+        return redirect()->back()->with('success', 'Sua solicitação de visita foi enviada! O responsável entrará em contato.');
+    }
+
+    public function getAccessList(Property $property)
+    {
+        if (!Auth::user()->canManageProperties()) abort(403);
+        
+        if (Auth::user()->isAdmin()) {
+            $clients = User::where('role', 'client')->orderBy('name')->get();
+        } else {
+            // Ajuste se o developer puder ver apenas SEUS clientes
+            $clients = User::where('developer_id', Auth::id())->orderBy('name')->get();
+        }
+
+        // Assumindo que existe um relacionamento many-to-many 'allowedUsers' no Model
+        $allowedIds = $property->allowedUsers()->pluck('users.id')->toArray();
+
+        return response()->json([
+            'clients' => $clients,
+            'allowed_ids' => $allowedIds
+        ]);
     }
 }

@@ -2,93 +2,64 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        // Novos campos para o controle de acesso (Off-Market)
-        'role',              // admin, client, developer
-        'status',            // pending, active, suspended
-        'market_access',     // boolean: tem acesso ao off-market?
-        'access_expires_at', // validade do acesso
+        'role',
+        'status',
+        'developer_id',
+        'can_view_all_properties', // NOVO
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            // Novos casts
-            'market_access' => 'boolean',
-            'access_expires_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'can_view_all_properties' => 'boolean', // NOVO
+    ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Helper Methods (Lógica de Acesso)
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Verifica se o utilizador é Administrador
-     */
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    /**
-     * Verifica se o utilizador tem conta Ativa
-     */
-    public function isActive(): bool
+    public function canManageProperties(): bool
     {
-        return $this->status === 'active';
+        return in_array($this->role, ['admin', 'developer']);
     }
 
-    /**
-     * Lógica Central: Verifica se tem acesso ao Off-Market
-     * Regra: Precisa estar ativo + ter flag true + data válida (ou nula/vitalícia)
-     */
-    public function hasMarketAccess(): bool
+    public function clients(): HasMany
     {
-        // Se for admin, tem sempre acesso
-        if ($this->isAdmin()) {
-            return true;
-        }
+        return $this->hasMany(User::class, 'developer_id');
+    }
 
-        return $this->isActive() 
-            && $this->market_access 
-            && ($this->access_expires_at === null || $this->access_expires_at->isFuture());
+    public function developer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'developer_id');
+    }
+
+    public function accessibleProperties(): BelongsToMany
+    {
+        return $this->belongsToMany(Property::class, 'property_access', 'user_id', 'property_id')
+                    ->withPivot('granted_by')
+                    ->withTimestamps();
     }
 }

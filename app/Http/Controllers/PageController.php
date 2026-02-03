@@ -2,31 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Consultant;
 use Illuminate\Http\Request;
+use App\Models\Property;
+use App\Models\Consultant;
 
 class PageController extends Controller
 {
-    /**
-     * Página Pública: A Nossa Equipa
-     * Exibe apenas consultores marcados como 'ativos', ordenados pela preferência do admin.
-     */
-    public function team()
+    public function home()
     {
-        // Usa o Scope 'active' e 'ordered' que definimos no Model
-        $consultants = Consultant::active()
-            ->ordered()
-            ->get();
-
-        return view('team', compact('consultants'));
+        // Pega os 6 imóveis mais recentes para a Home
+        $properties = Property::latest()->take(6)->get();
+        return view('pages.home', compact('properties'));
     }
 
-    /**
-     * Página Pública: Trabalhe Connosco (Recrutamento)
-     * Exibe o formulário de candidatura.
-     */
-    public function recruitment()
+    public function about()
     {
-        return view('recruitment');
+        return view('pages.about');
+    }
+    
+    public function team()
+    {
+        // Lista apenas consultores ativos
+        $consultants = Consultant::where('is_active', true)->orderBy('order')->get();
+        return view('pages.team', compact('consultants'));
+    }
+
+    public function contact()
+    {
+        return view('pages.contact');
     }
 }

@@ -4,21 +4,29 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
-    /**
-     * Handle an incoming request.
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        // Se a sessão tiver 'locale', define a app para esse idioma
+        $locale = 'pt';
+
         if (Session::has('locale')) {
-            App::setLocale(Session::get('locale'));
+            $locale = Session::get('locale');
+        } elseif ($request->cookie('crow_locale')) {
+            $locale = $request->cookie('crow_locale');
         }
+
+        // CORREÇÃO AQUI: Adicionar 'fr' ao array
+        if (! in_array($locale, ['en', 'pt', 'fr'])) {
+            $locale = 'pt';
+        }
+
+        App::setLocale($locale);
+        Session::put('locale', $locale);
 
         return $next($request);
     }

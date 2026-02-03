@@ -4,8 +4,9 @@ namespace App\Services\Chatbot;
 
 use OpenAI;
 use App\Models\Property;
+use App\Models\AccessRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 use GuzzleHttp\Client as GuzzleClient;
 
 class ChatbotService
@@ -18,61 +19,36 @@ class ChatbotService
 
         if (empty($apiKey)) {
             Log::critical('OpenAI API Key is missing.');
-            return; 
+            throw new \Exception('OpenAI API Key não configurada.');
         }
 
-        // Timeout 60s para garantir geração de áudio
+        // Configuração blindada para Localhost (SSL)
         $this->client = OpenAI::factory()
             ->withApiKey($apiKey)
-            ->withHttpClient(new GuzzleClient(['timeout' => 60])) 
+            ->withHttpClient(new GuzzleClient([
+                'verify' => false, 
+                'timeout' => 30,
+            ]))
             ->make();
     }
 
-    public function handleMessage(string $message, string $locale = 'pt', array $history = []): array
+    public function handleMessage(string $message, string $locale, array $history = []): array
     {
-        if (!$this->client) {
-            return [
-                'reply' => 'O assistente está em manutenção momentânea.',
-                'audio' => null,
-                'data'  => null
-            ];
-        }
-
         $tools = $this->getToolsDefinition();
         
-        // --- CONTEXTO DINÂMICO ---
-        $appName = Config::get('app.name', 'Imobiliária Premium');
-        
-        // --- PROMPT REFINADO (GENERIC & BRANDED) ---
-        // Agora ele assume a postura da nova marca (Bordeaux/Verde)
-        $systemPrompt = "
-            You are the 'Private Virtual Assistant' for {$appName}, a high-end real estate agency.
-            
-            CONTEXT & BRANDING:
-            - Brand Identity: Exclusive, Heritage, Trust.
-            - Visual Tone: Bordeaux (Passion/Luxury) and English Green (Tradition/Nature).
-            - Your Tone: Professional, Executive, Discreet, and Expert.
-            
-            CRITICAL LANGUAGE INSTRUCTION:
-            You MUST speak in EUROPEAN PORTUGUESE (Português de Portugal).
-            - Use 'estou a fazer' instead of 'estou fazendo'.
-            - Use 'connosco' instead of 'conosco'.
-            - Use 'gostaria' instead of 'queria'.
-            - Treat the user with high formality (implicitly 'O senhor/A senhora').
-            - Avoid the word 'você' explicitly; use third-person conjugation.
-            
+        $systemPrompt = "You are 'Crow AI', the real estate assistant for Crow Global.
+            Current Language: '{$locale}'.
             RULES:
-            1. Answer exclusively in European Portuguese.
-            2. Be concise but sophisticated. High-net-worth clients value time.
-            3. Use 'search_properties' ONLY when the user asks for properties, houses, or investment opportunities.
-            4. Use 'schedule_meeting' if the user wants to sell, talk to an agent, or schedule a visit.
-            5. Do not invent property data. Only use what the tool returns.
+            1. Answer exclusively in '{$locale}'.
+            2. Be concise and professional.
+            3. Use 'search_properties' for buying.
+            4. Use 'submit_sell_lead' for selling.
+            5. Use 'request_off_market_access' ONLY if user asks for exclusive/off-market access.
         ";
 
-        // Limpar histórico (mantém apenas as últimas 6 mensagens para economizar tokens)
         $cleanHistory = array_map(function($msg) {
             return ['role' => $msg['role'], 'content' => $msg['content'] ?? ''];
-        }, array_slice($history, -6)); 
+        }, $history);
 
         $messages = array_merge(
             [['role' => 'system', 'content' => $systemPrompt]],
@@ -81,8 +57,9 @@ class ChatbotService
         );
 
         try {
+            // Chamada à API (Modelo Econômico)
             $response = $this->client->chat()->create([
-                'model' => 'gpt-4o-mini',
+                'model' => 'gpt-4o-mini', 
                 'messages' => $messages,
                 'tools' => $tools,
                 'tool_choice' => 'auto', 
@@ -92,7 +69,6 @@ class ChatbotService
             $replyContent = $choice->message->content ?? '';
             $frontendData = null;
 
-            // Se a IA decidiu chamar uma ferramenta (busca ou agendamento)
             if ($choice->finishReason === 'tool_calls') {
                 $messages[] = $choice->message->toArray();
 
@@ -102,7 +78,6 @@ class ChatbotService
 
                     $toolResult = $this->executeFunction($functionName, $args);
 
-                    // Se for busca, separamos os dados para o Frontend (Cards) do resumo em texto
                     if ($functionName === 'search_properties' && is_array($toolResult) && isset($toolResult['data'])) {
                         $frontendData = $toolResult['data'];
                         $toolResult = $toolResult['summary'];
@@ -115,7 +90,6 @@ class ChatbotService
                     ];
                 }
 
-                // Segunda chamada para a IA gerar a resposta final com base no resultado da ferramenta
                 $finalResponse = $this->client->chat()->create([
                     'model' => 'gpt-4o-mini',
                     'messages' => $messages,
@@ -124,9 +98,7 @@ class ChatbotService
                 $replyContent = $finalResponse->choices[0]->message->content;
             }
 
-            if (empty($replyContent)) $replyContent = "Compreendido. Posso ajudar com algo mais?";
-            
-            // --- GERAÇÃO DE ÁUDIO (TTS) ---
+            if (empty($replyContent)) $replyContent = "Ok.";
             $audioBase64 = $this->textToSpeech($replyContent);
 
             return [
@@ -138,7 +110,7 @@ class ChatbotService
         } catch (\Exception $e) {
             Log::error("Chatbot Error: " . $e->getMessage());
             return [
-                'reply' => "Peço desculpa, mas estou com uma ligeira instabilidade na ligação. Pode repetir?",
+                'reply' => ($locale == 'pt') ? "Tive um erro técnico momentâneo. Tente novamente." : "Temporary technical error.",
                 'audio' => null,
                 'data' => null
             ];
@@ -148,22 +120,16 @@ class ChatbotService
     private function textToSpeech(string $text): ?string
     {
         try {
-            // Limite de caracteres para segurança da API
-            $inputText = mb_substr($text, 0, 4096);
-
+            $textSample = substr($text, 0, 500); 
             $response = $this->client->audio()->speech([
-                'model' => 'tts-1',
-                'input' => $inputText,
-                'voice' => 'onyx', // Voz "Onyx" é a mais neutra/profissional
-                'response_format' => 'mp3',
-                'speed' => 1.0
+                'model' => 'tts-1', 
+                'input' => $textSample,
+                'voice' => 'shimmer', 
             ]);
-
             return base64_encode($response); 
-
         } catch (\Exception $e) {
-            Log::error("Chatbot TTS Error: " . $e->getMessage());
-            return null;
+            Log::error('TTS Error: ' . $e->getMessage());
+            return null; 
         }
     }
 
@@ -173,63 +139,70 @@ class ChatbotService
             switch ($name) {
                 case 'search_properties':
                     $query = Property::query()
-                        ->where('is_visible', true);
-                        // ->where('status', '!=', 'Sold') // Ativar se necessário
+                        ->where('status', 'active')
+                        ->where('is_exclusive', false);
 
-                    if (!empty($args['location'])) {
-                        $query->where(function($q) use ($args) {
-                            $q->where('location', 'LIKE', "%{$args['location']}%")
-                              ->orWhere('city', 'LIKE', "%{$args['location']}%")
-                              ->orWhere('title', 'LIKE', "%{$args['location']}%");
-                        });
-                    }
+                    if (!empty($args['city'])) $query->where('city', 'LIKE', "%{$args['city']}%");
                     
-                    if (!empty($args['type'])) {
-                        $query->where('type', 'LIKE', "%{$args['type']}%");
-                    }
-
                     if (!empty($args['max_price'])) {
                         $price = preg_replace('/[^0-9]/', '', $args['max_price']);
                         $query->where('price', '<=', $price);
                     }
 
-                    $properties = $query->latest()->limit(3)->get();
+                    $properties = $query->limit(4)->get();
 
-                    if ($properties->isEmpty()) return "Não encontrei imóveis com esses critérios exatos no nosso portfólio privado.";
+                    if ($properties->isEmpty()) return "No properties found.";
 
                     return [
-                        'summary' => "Encontrei " . $properties->count() . " opções exclusivas.",
+                        'summary' => "Found " . $properties->count() . " properties.",
                         'data' => $properties->map(function($p) {
                             return [
                                 'id' => $p->id,
-                                'title' => $p->title,
+                                'title' => $p->title ?? 'Imóvel',
                                 'price' => number_format($p->price, 0, ',', '.') . ' €',
-                                // Garante fallback de imagem se não houver capa
-                                'image' => $p->cover_image ? asset('storage/' . $p->cover_image) : 'https://placehold.co/600x400?text=Sem+Imagem',
-                                'link' => route('properties.show', $p->slug)
+                                'image' => $p->cover_image ? asset('storage/' . $p->cover_image) : 'https://placehold.co/600x400',
+                                'link' => route('properties.show', $p->id)
                             ];
                         })
                     ];
 
-                case 'schedule_meeting':
+                case 'submit_sell_lead':
                     try {
-                        $contact = $args['contact'] ?? 'Não informado';
-                        $reason = $args['reason'] ?? 'Geral';
-                        Log::info("Lead Chatbot Capturado: [{$contact}] - Motivo: {$reason}");
-                        
-                        // TODO: Disparar Evento ou Job para envio de email assíncrono
-                        // ContactLeadJob::dispatch($contact, $reason);
-
+                        Mail::raw("Nova Lead de Venda (AI Chatbot):\n\nDescrição: {$args['description']}\nContato: {$args['contact']}", function ($msg) {
+                            $msg->to('admin@crow-global.com') // Troque pelo seu email real de teste
+                                ->subject('Nova Oportunidade de Venda 🏠');
+                        });
+                        Log::info("Lead email sent.");
                     } catch (\Exception $e) {
-                        Log::error("Mail/Log Error: " . $e->getMessage());
+                        Log::error("Mail Error: " . $e->getMessage());
                     }
-                    return "O pedido de agendamento foi registado com sucesso. A nossa equipa entrará em contacto brevemente.";
+                    return "Lead saved and admin notified.";
+
+                case 'request_off_market_access':
+                    // Verificação extra para evitar duplicidade de email (Opcional, mas boa prática)
+                    if (AccessRequest::where('email', $args['email'])->exists()) {
+                        return "Este e-mail já possui uma solicitação pendente.";
+                    }
+
+                    AccessRequest::create([
+                        'user_id' => auth()->id() ?? null,
+                        'name' => $args['name'],
+                        'email' => $args['email'],
+                        'message' => $args['reason'], 
+                        'status' => 'pending',
+                        'requested_role' => 'investor', 
+                        'country' => 'Portugal', // Obrigatório no banco
+                        'investor_type' => 'client' // <--- CORREÇÃO: Valor aceito pelo ENUM do banco
+                    ]);
+                    
+                    return "Request submitted successfully. Waiting for approval.";
 
                 default:
-                    return "Função desconhecida.";
+                    return "Function not found.";
             }
         } catch (\Exception $e) {
-            return "Erro ao processar pedido: " . $e->getMessage();
+            Log::error("DB Error ($name): " . $e->getMessage());
+            return "Error executing action: " . $e->getMessage();
         }
     }
 
@@ -240,13 +213,12 @@ class ChatbotService
                 'type' => 'function',
                 'function' => [
                     'name' => 'search_properties',
-                    'description' => 'Procurar imóveis para venda ou investimento com base em critérios.',
+                    'description' => 'Search properties for sale.',
                     'parameters' => [
                         'type' => 'object',
                         'properties' => [
-                            'location' => ['type' => 'string', 'description' => 'Cidade ou zona (ex: Lisboa, Cascais)'],
-                            'type' => ['type' => 'string', 'description' => 'Tipo de imóvel (Apartamento, Moradia, Terreno)'],
-                            'max_price' => ['type' => 'number', 'description' => 'Preço máximo ou orçamento em euros'],
+                            'city' => ['type' => 'string'],
+                            'max_price' => ['type' => 'number'],
                         ],
                     ],
                 ],
@@ -254,15 +226,31 @@ class ChatbotService
             [
                 'type' => 'function',
                 'function' => [
-                    'name' => 'schedule_meeting',
-                    'description' => 'Agendar reunião, visita ou pedir contacto comercial.',
+                    'name' => 'submit_sell_lead',
+                    'description' => 'User wants to sell a property.',
                     'parameters' => [
                         'type' => 'object',
                         'properties' => [
-                            'contact' => ['type' => 'string', 'description' => 'Email ou telefone do utilizador'],
-                            'reason' => ['type' => 'string', 'description' => 'Motivo do contacto (Vender, Comprar, Visita)'],
+                            'description' => ['type' => 'string'],
+                            'contact' => ['type' => 'string'],
                         ],
-                        'required' => ['contact'],
+                        'required' => ['description', 'contact'],
+                    ],
+                ],
+            ],
+            [
+                'type' => 'function',
+                'function' => [
+                    'name' => 'request_off_market_access',
+                    'description' => 'Request exclusive access.',
+                    'parameters' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'name' => ['type' => 'string'],
+                            'email' => ['type' => 'string'],
+                            'reason' => ['type' => 'string'],
+                        ],
+                        'required' => ['name', 'email', 'reason'],
                     ],
                 ],
             ],
