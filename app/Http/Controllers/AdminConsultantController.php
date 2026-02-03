@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\Storage;
 class AdminConsultantController extends Controller
 {
     /**
-     * Lista todos os consultores no Backoffice.
+     * Exibe a lista de consultores.
      */
     public function index()
     {
-        // Ordena por 'order' ascendente para refletir a ordem do site
-        $consultants = Consultant::orderBy('order', 'asc')->paginate(20);
+        // A proteção de 'auth' e 'admin' será feita via rotas/middleware
+        $consultants = Consultant::latest()->paginate(10);
         return view('admin.consultants.index', compact('consultants'));
     }
 
@@ -27,43 +27,31 @@ class AdminConsultantController extends Controller
     }
 
     /**
-     * Guarda um novo consultor na BD.
+     * Salva o novo consultor.
      */
     public function store(Request $request)
     {
-        // 1. Validação Robusta
-        $data = $request->validate([
-            'name'      => 'required|string|max:255',
-            'email'     => 'nullable|email|max:255',
-            'phone'     => 'nullable|string|max:20',
-            'role'      => 'nullable|string|max:100',
-            'photo'     => 'nullable|image|max:5120', // Max 5MB
-            'bio'       => 'nullable|string',
-            'instagram' => 'nullable|url|max:255',
-            'facebook'  => 'nullable|url|max:255',
-            'linkedin'  => 'nullable|url|max:255',
-            'tiktok'    => 'nullable|url|max:255',
-            'whatsapp'  => 'nullable|string|max:20', // Apenas números idealmente
-            'order'     => 'nullable|integer',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'bio' => 'nullable|string',
+            'facebook' => 'nullable|url',
+            'instagram' => 'nullable|url',
+            'linkedin' => 'nullable|url',
         ]);
 
-        // 2. Tratamento de Checkbox (Boolean)
-        $data['is_active'] = $request->has('is_active');
-
-        // 3. Ordem Automática (se vier vazio, vai para o fim da fila)
-        if ($request->order === null) {
-            $data['order'] = Consultant::max('order') + 1;
-        }
-
-        // 4. Upload da Foto (pasta 'public/consultants')
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('consultants', 'public');
+            $path = $request->file('photo')->store('consultants', 'public');
+            $validated['photo'] = $path;
         }
 
-        Consultant::create($data);
+        Consultant::create($validated);
 
         return redirect()->route('admin.consultants.index')
-            ->with('success', 'Consultor adicionado à equipa com sucesso!');
+            ->with('success', 'Consultor adicionado com sucesso!');
     }
 
     /**
@@ -75,53 +63,49 @@ class AdminConsultantController extends Controller
     }
 
     /**
-     * Atualiza os dados do consultor.
+     * Atualiza o consultor.
      */
     public function update(Request $request, Consultant $consultant)
     {
-        $data = $request->validate([
-            'name'      => 'required|string|max:255',
-            'email'     => 'nullable|email|max:255',
-            'phone'     => 'nullable|string|max:20',
-            'role'      => 'nullable|string|max:100',
-            'photo'     => 'nullable|image|max:5120',
-            'bio'       => 'nullable|string',
-            'instagram' => 'nullable|url|max:255',
-            'facebook'  => 'nullable|url|max:255',
-            'linkedin'  => 'nullable|url|max:255',
-            'tiktok'    => 'nullable|url|max:255',
-            'whatsapp'  => 'nullable|string|max:20',
-            'order'     => 'nullable|integer',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048', // Foto opcional na edição
+            'bio' => 'nullable|string',
+            'facebook' => 'nullable|url',
+            'instagram' => 'nullable|url',
+            'linkedin' => 'nullable|url',
         ]);
 
-        $data['is_active'] = $request->has('is_active');
-
-        // Lógica de Atualização da Imagem
         if ($request->hasFile('photo')) {
-            // Remove a antiga se existir e for um ficheiro local
-            if ($consultant->photo && Storage::disk('public')->exists($consultant->photo)) {
+            // Apaga a foto antiga se existir
+            if ($consultant->photo) {
                 Storage::disk('public')->delete($consultant->photo);
             }
-            $data['photo'] = $request->file('photo')->store('consultants', 'public');
+            $path = $request->file('photo')->store('consultants', 'public');
+            $validated['photo'] = $path;
         }
 
-        $consultant->update($data);
+        $consultant->update($validated);
 
         return redirect()->route('admin.consultants.index')
-            ->with('success', 'Ficha do consultor atualizada!');
+            ->with('success', 'Consultor atualizado com sucesso!');
     }
 
     /**
-     * Remove o consultor e a sua foto.
+     * Remove o consultor.
      */
     public function destroy(Consultant $consultant)
     {
-        if ($consultant->photo && Storage::disk('public')->exists($consultant->photo)) {
+        if ($consultant->photo) {
             Storage::disk('public')->delete($consultant->photo);
         }
         
         $consultant->delete();
 
-        return back()->with('success', 'Consultor removido permanentemente.');
+        return redirect()->route('admin.consultants.index')
+            ->with('success', 'Consultor removido.');
     }
 }
