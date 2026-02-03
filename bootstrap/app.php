@@ -12,11 +12,17 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         
-        // Regista o middleware de idioma no grupo 'web'
+        // 1. AQUI: Registra os "Apelidos" para usar nas Rotas
+        // Sem isso, o Laravel não sabe o que é 'active_access' ou 'admin'
+        $middleware->alias([
+            'active_access' => \App\Http\Middleware\EnsureUserHasActiveAccess::class,
+            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+        ]);
+
+        // 2. Registra o middleware de idioma no grupo 'web' (Mantive o seu código)
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
         ]);
-        
         
     })
     ->withExceptions(function (Exceptions $exceptions) {
