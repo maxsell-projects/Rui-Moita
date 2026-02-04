@@ -9,8 +9,8 @@
             {{-- BRANDING & SOCIAL --}}
             <div>
                 <div class="font-heading text-2xl font-bold mb-4">
-                    <span class="text-white">CROW</span>
-                    <span class="text-intellectus-accent"> GLOBAL</span>
+                    <span class="text-white">INTELLECTUS</span>
+                    <span class="text-intellectus-accent"> </span>
                 </div>
                 <p class="text-white/70 text-sm leading-relaxed mb-4">
                     {{ __('Premium real estate investments connecting global capital to Portugal\'s most exclusive markets.') }}
@@ -72,7 +72,7 @@
                     </li>
                     <li class="flex items-center gap-3">
                         <svg class="w-5 h-5 text-intellectus-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <span class="text-white/70 text-sm">info@crowglobal.pt</span>
+                        <span class="text-white/70 text-sm">info@intellectus.pt</span>
                     </li>
 
                     {{-- HORÁRIO DE FUNCIONAMENTO --}}
@@ -91,14 +91,14 @@
         <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
             
             <p class="text-white/60 text-sm text-center md:text-left">
-                © {{ date('Y') }} Crow Global Investments. {{ __('All rights reserved.') }}
+                © {{ date('Y') }} intellectus {{ __('All rights reserved.') }}
             </p>
 
             <div class="flex items-center gap-3 opacity-40 hover:opacity-100 transition-all duration-500 group cursor-pointer" title="Developed by MaxSell">
                 <span class="text-[10px] text-white/50 uppercase tracking-widest group-hover:text-white transition-colors hidden md:block">
                     Technology by
                 </span>
-                <img src="{{ asset('images/maxsell.png') }}" 
+                <img src="{{ asset('img/maxsell.png') }}" 
                      alt="MaxSell" 
                      class="h-6 w-auto grayscale group-hover:grayscale-0 transition-all duration-500">
             </div>
