@@ -40,7 +40,10 @@
                 <h3 class="font-heading text-lg font-semibold mb-4">{{ __('Legal Info') }}</h3>
                 <ul class="space-y-2">
                     <li><a href="{{ route('legal.privacy') }}" class="text-white/70 hover:text-accent transition-colors text-sm">{{ __('legal.privacy.title') }}</a></li>
-                    <li><a href="{{ route('legal.terms') }}" class="text-white/70 hover:text-accent transition-colors text-sm">{{ __('legal.terms.title') }}</a></li>
+                    
+                    {{-- AQUI A CORREÇÃO: route('terms') --}}
+                    <li><a href="{{ route('terms') }}" class="text-white/70 hover:text-accent transition-colors text-sm">{{ __('legal.terms.title') }}</a></li>
+                    
                     <li><a href="{{ route('legal.cookies') }}" class="text-white/70 hover:text-accent transition-colors text-sm">{{ __('legal.cookies.title') }}</a></li>
                     <li><a href="{{ route('legal.notice') }}" class="text-white/70 hover:text-accent transition-colors text-sm">{{ __('legal.notice.title') }}</a></li>
                     
