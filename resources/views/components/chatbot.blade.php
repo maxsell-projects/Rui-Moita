@@ -4,9 +4,9 @@
     
     // 2. Define a frase de boas-vindas baseada no idioma
     $greeting = match($locale) {
-        'en' => "Hello! I am Crow Global AI. I can help you buy, sell, or access the Off-Market. How can I help?",
-        'fr' => "Bonjour! Je suis l'IA de Crow Global. Je peux vous aider à acheter, vendre ou accéder au Off-Market. Comment puis-je vous aider?",
-        default => "Olá! Sou a IA da Crow Global. Posso ajudar a encontrar imóveis, vender o seu ou falar sobre o mercado exclusivo. Como posso ajudar?",
+        'en' => "Hello! I am Intellectus AI. I can help you buy, sell, or access the Off-Market. How can I help?",
+        'fr' => "Bonjour! Je suis l'IA de Intellectus. Je peux vous aider à acheter, vendre ou accéder au Off-Market. Comment puis-je vous aider?",
+        default => "Olá! Sou a IA da Intellectus. Posso ajudar a encontrar imóveis, vender o seu ou falar sobre o mercado exclusivo. Como posso ajudar?",
     };
 
     // 3. Define o placeholder do input
@@ -32,7 +32,7 @@
             <div class="flex items-center gap-3">
                 <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
                 <div>
-                    <h3 class="font-bold text-sm">Crow AI Assistant</h3>
+                    <h3 class="font-bold text-sm">Intellectus AI Assistant</h3>
                     <p class="text-xs text-gray-400">Online &bull; {{ strtoupper($locale) }}</p>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </button>
             </div>
-            <p class="text-[10px] text-center text-gray-400 mt-2">Powered by Crow Global AI</p>
+            <p class="text-[10px] text-center text-gray-400 mt-2">Powered by Maxsell</p>
         </div>
     </div>
 
