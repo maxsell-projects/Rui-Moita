@@ -156,4 +156,4 @@
             <p class="text-[9px] text-white/20 uppercase tracking-widest">Rui Moita Private Office &copy; {{ date('Y') }}</p>
         </div>
     </div>
-</header>
+</header>   
