@@ -5,57 +5,55 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Services\Chatbot\ChatbotService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 class ChatbotController extends Controller
 {
-    /**
-     * Endpoint principal que processa a mensagem e retorna Texto + Áudio.
-     */
-    public function sendMessage(Request $request, ChatbotService $bot)
+    protected ChatbotService $chatbotService;
+
+    public function __construct(ChatbotService $chatbotService)
     {
-        // 1. Validação simples e robusta
+        $this->chatbotService = $chatbotService;
+    }
+
+    public function sendMessage(Request $request): JsonResponse
+    {
         $validated = $request->validate([
             'message' => 'required|string|max:1000',
-            'history' => 'array|nullable', // Histórico da conversa para contexto
-            'history.*.role' => 'in:user,assistant,system,tool',
-            'history.*.content' => 'nullable|string',
+            'history' => 'nullable|array', // O seu JS envia o histórico (slice(-6))
         ]);
 
         try {
-            // 2. Detectar o idioma (Prioridade: Sessão > Cookie > Config > Default)
-            $locale = session('locale', $request->cookie('crow_locale', config('app.locale')));
-
-            // 3. Montar histórico sanitizado
-            $history = $validated['history'] ?? [];
-
-            // 4. Delegar para o Service (O Cérebro)
-            $response = $bot->handleMessage(
+            // O Service deve retornar um array estruturado, não apenas uma string
+            // Exemplo de retorno do Service: ['text' => 'Olá...', 'properties' => [...], 'audio' => 'base64...']
+            $botResponse = $this->chatbotService->handle(
                 $validated['message'],
-                $locale,
-                $history
+                $request->user(),
+                $validated['history'] ?? []
             );
 
-            // 5. Retornar JSON estruturado
+            // Resposta formatada para o SEU Frontend específico
             return response()->json([
                 'status' => 'success',
-                'reply'  => $response['reply'], // Texto
-                'audio'  => $response['audio'], // Base64 MP3
-                'data'   => $response['data']   // Imóveis ou cards
-            ]);
+                
+                // O JS lê: data.reply
+                'reply' => $botResponse['text'] ?? 'Desculpe, não entendi.', 
+                
+                // O JS lê: data.data (para os cards de imóveis)
+                // Certifique-se que o array de imóveis tenha chaves: 'title', 'price', 'image', 'link'
+                'data' => $botResponse['properties'] ?? [], 
+                
+                // O JS lê: data.audio (para o player de voz)
+                'audio' => $botResponse['audio'] ?? null, 
+            ], 200);
 
         } catch (\Exception $e) {
-            // Logar o erro real para nós (devs)
-            Log::error('Chatbot Error: ' . $e->getMessage(), [
-                'user_id' => Auth::id(),
-                'trace' => $e->getTraceAsString()
-            ]);
+            Log::error('Chatbot Error: ' . $e->getMessage());
 
-            // Retornar erro genérico amigável para o usuário
             return response()->json([
                 'status' => 'error',
-                'message' => 'Desculpe, estou processando muita informação agora. Tente novamente em instantes.'
+                'reply' => 'Ocorreu um erro interno. Tente novamente.',
             ], 500);
         }
     }

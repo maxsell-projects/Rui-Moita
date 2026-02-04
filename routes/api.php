@@ -1,18 +1,20 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ChatbotController;
 
-Route::prefix('v1/chatbot')->group(function () {
-    // Rota principal do chat (Remova o 'chatbot' do nome da rota pois já está no prefixo)
-    Route::post('/message', [ChatbotController::class, 'sendMessage']);
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
 
-    // Listagem de imóveis
-    Route::get('/properties', [ChatbotController::class, 'properties']);
-    
-    // Rotas que precisam de proteção (Middleware)
-    Route::middleware(['chatbot.auth'])->group(function () {
-        Route::post('/check-status', [ChatbotController::class, 'checkStatus']);
-        Route::post('/lead', [ChatbotController::class, 'storeLead']);
-    });
+// CORREÇÃO: O nome deve ser 'chatbot.send' para bater com o {{ route('chatbot.send') }} do blade
+Route::post('/chatbot/send', [ChatbotController::class, 'sendMessage'])
+    ->name('chatbot.send');
+
+// Rota de usuário (opcional, mantive seu exemplo)
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
 });
