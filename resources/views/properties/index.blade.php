@@ -1,226 +1,173 @@
-@extends('layouts.app')
+<x-public-layout>
+    @include('components.header')
 
-@section('title', __('Coleção Privada | Marco Moura'))
-
-@section('content')
-
-{{-- HERO SECTION: EDITORIAL (Agora com Azul Primary para contraste e mais espaço no topo) --}}
-<section class="bg-brand-primary text-white pt-52 pb-32 text-center relative overflow-hidden">
-    {{-- Padrão de Fundo Sutil --}}
-    <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-    
-    {{-- Gradiente Decorativo para dar profundidade --}}
-    <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none"></div>
-
-    <div class="container mx-auto px-6 relative z-10" data-aos="fade-up">
-        <p class="text-brand-sand font-mono text-xs uppercase tracking-[0.4em] mb-6 flex justify-center items-center gap-3">
-            <span class="w-6 h-[1px] bg-brand-sand"></span>
-            {{ __('Portfólio Exclusivo') }}
-            <span class="w-6 h-[1px] bg-brand-sand"></span>
-        </p>
-        <h1 class="text-5xl md:text-7xl font-serif leading-tight mb-4">
-            {{ __('Encontre o Seu') }} <span class="italic text-brand-sand">{{ __('Legado.') }}</span>
-        </h1>
-    </div>
-</section>
-
-<section class="py-20 bg-brand-background text-brand-text min-h-screen">
-    <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+    <main class="py-12 bg-gray-50 min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
             
-            {{-- SIDEBAR DE FILTROS (Sticky ajustado para não bater no header) --}}
-            <aside class="lg:col-span-1">
-                <div class="bg-white p-8 shadow-xl border-t-4 border-brand-primary sticky top-40" data-aos="fade-right">
-                    <div class="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
-                        <h3 class="font-serif text-xl text-brand-secondary">{{ __('Refinar Busca') }}</h3>
-                        <a href="{{ route('portfolio') }}" class="text-[10px] text-gray-400 uppercase hover:text-brand-primary tracking-widest transition-colors">
-                            {{ __('Limpar') }}
-                        </a>
-                    </div>
-                    
-                    <form action="{{ route('portfolio') }}" method="GET" class="space-y-6">
-                        
-                        {{-- Busca Livre --}}
-                        <div class="group">
-                            <label class="text-xs font-bold uppercase tracking-widest text-brand-secondary mb-2 block">{{ __('Localização') }}</label>
-                            <div class="relative">
-                                <input type="text" name="location" value="{{ request('location') }}" placeholder="{{ __('Ex: Estoril, Chiado...') }}" 
-                                       class="w-full bg-brand-background border-b border-gray-200 px-0 py-3 text-sm focus:outline-none focus:border-brand-primary transition-colors placeholder-gray-400 text-brand-primary font-light">
-                                <svg class="w-4 h-4 text-gray-400 absolute right-0 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                            </div>
+            <div class="flex flex-col lg:flex-row gap-8">
+                
+                <aside class="w-full lg:w-1/4">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 sticky top-32">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-bold text-graphite flex items-center gap-2">
+                                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                                {{ __('Filter') }}
+                            </h3>
+                            <a href="{{ route('properties.index') }}" class="text-xs text-gray-500 hover:text-accent">{{ __('Clear') }}</a>
                         </div>
 
-                        {{-- Tipo --}}
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-widest text-brand-secondary mb-2 block">{{ __('Tipo de Imóvel') }}</label>
-                            <select name="type" class="w-full bg-brand-background border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-brand-primary text-gray-600 appearance-none rounded-none">
-                                <option value="">{{ __('Todos os Tipos') }}</option>
-                                <option value="Apartamento" {{ request('type') == 'Apartamento' ? 'selected' : '' }}>{{ __('Apartamento') }}</option>
-                                <option value="Moradia" {{ request('type') == 'Moradia' ? 'selected' : '' }}>{{ __('Moradia / Villa') }}</option>
-                                <option value="Terreno" {{ request('type') == 'Terreno' ? 'selected' : '' }}>{{ __('Terreno') }}</option>
-                                <option value="Comercial" {{ request('type') == 'Comercial' ? 'selected' : '' }}>{{ __('Comercial') }}</option>
-                            </select>
-                        </div>
-
-                        {{-- Finalidade --}}
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-widest text-brand-secondary mb-3 block">{{ __('Objetivo') }}</label>
-                            <div class="flex gap-6">
-                                <label class="flex items-center text-sm text-gray-600 gap-2 cursor-pointer group">
-                                    <div class="relative flex items-center">
-                                        <input type="radio" name="status" value="Venda" {{ request('status') == 'Venda' ? 'checked' : '' }} class="peer sr-only">
-                                        <div class="w-4 h-4 border border-gray-300 rounded-full peer-checked:border-brand-primary peer-checked:bg-brand-primary transition-all"></div>
-                                    </div>
-                                    <span class="group-hover:text-brand-primary transition-colors text-xs uppercase tracking-wider">{{ __('Comprar') }}</span>
-                                </label>
-                                <label class="flex items-center text-sm text-gray-600 gap-2 cursor-pointer group">
-                                    <div class="relative flex items-center">
-                                        <input type="radio" name="status" value="Arrendamento" {{ request('status') == 'Arrendamento' ? 'checked' : '' }} class="peer sr-only">
-                                        <div class="w-4 h-4 border border-gray-300 rounded-full peer-checked:border-brand-primary peer-checked:bg-brand-primary transition-all"></div>
-                                    </div>
-                                    <span class="group-hover:text-brand-primary transition-colors text-xs uppercase tracking-wider">{{ __('Arrendar') }}</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        {{-- Preço --}}
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-widest text-brand-secondary mb-2 block">{{ __('Investimento (€)') }}</label>
-                            <div class="grid grid-cols-2 gap-4">
-                                <input type="number" name="price_min" value="{{ request('price_min') }}" placeholder="Min" 
-                                       class="w-full bg-brand-background border border-gray-200 px-3 py-3 text-sm focus:border-brand-primary outline-none transition-colors placeholder-gray-400 font-light">
-                                <input type="number" name="price_max" value="{{ request('price_max') }}" placeholder="Max" 
-                                       class="w-full bg-brand-background border border-gray-200 px-3 py-3 text-sm focus:border-brand-primary outline-none transition-colors placeholder-gray-400 font-light">
-                            </div>
-                        </div>
-
-                        {{-- Quartos --}}
-                        <div>
-                            <label class="text-xs font-bold uppercase tracking-widest text-brand-secondary mb-2 block">{{ __('Tipologia (Quartos)') }}</label>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach(['1', '2', '3', '4+'] as $bed)
-                                    <label class="cursor-pointer flex-1">
-                                        <input type="radio" name="bedrooms" value="{{ $bed }}" {{ request('bedrooms') == $bed ? 'checked' : '' }} class="peer sr-only">
-                                        <span class="block w-full py-2 text-center border border-gray-200 text-sm peer-checked:bg-brand-primary peer-checked:text-white peer-checked:border-brand-primary hover:border-brand-primary hover:text-brand-primary transition-all text-gray-500 font-serif">
-                                            {{ $bed }}
-                                        </span>
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-brand-primary text-white font-bold uppercase tracking-[0.2em] text-xs py-4 hover:bg-brand-secondary transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1">
-                            {{ __('Atualizar Resultados') }}
-                        </button>
-                    </form>
-                </div>
-            </aside>
-
-            {{-- GRID DE IMÓVEIS --}}
-            <div class="lg:col-span-3">
-                <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
-                    <div>
-                        <h2 class="font-serif text-3xl text-brand-secondary">{{ __('Resultados') }}</h2>
-                        <p class="text-gray-500 text-xs mt-1 uppercase tracking-widest">{{ $properties->total() }} {{ __('imóveis exclusivos') }}</p>
-                    </div>
-                    
-                    {{-- Ordenação --}}
-                    <div class="hidden md:flex items-center gap-2 text-xs uppercase tracking-widest text-gray-400">
-                        <span>{{ __('Ordenar:') }}</span>
-                        <select class="bg-transparent border-none text-brand-primary font-bold focus:ring-0 cursor-pointer text-xs uppercase tracking-widest p-0">
-                            <option>{{ __('Recentes') }}</option>
-                            <option>{{ __('Valor (Maior)') }}</option>
-                            <option>{{ __('Valor (Menor)') }}</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    @forelse($properties as $property)
-                        <div class="group bg-white flex flex-col h-full shadow-sm hover:shadow-2xl transition-all duration-500" data-aos="fade-up">
+                        <form method="GET" action="{{ route('properties.index') }}" class="space-y-6">
                             
-                            {{-- Capa --}}
-                            <div class="relative h-72 overflow-hidden">
-                                <a href="{{ route('properties.show', $property->slug) }}" class="block h-full w-full">
-                                    <div class="absolute inset-0 bg-brand-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity z-10 duration-500"></div>
-                                    <img src="{{ $property->cover_image ? asset('storage/' . $property->cover_image) : asset('img/placeholder.jpg') }}" 
-                                         alt="{{ $property->title }}" 
-                                         loading="lazy"
-                                         class="w-full h-full object-cover transform group-hover:scale-105 transition duration-[1.5s] ease-out">
-                                </a>
-                                
-                                {{-- Badges --}}
-                                <div class="absolute top-4 left-4 flex flex-col gap-2 z-20">
-                                    <span class="bg-white/90 backdrop-blur text-brand-secondary text-[10px] uppercase tracking-widest px-3 py-1 font-bold">
-                                        {{ $property->type }}
-                                    </span>
-                                    @if($property->is_featured)
-                                        <span class="bg-brand-sand text-brand-secondary text-[10px] uppercase tracking-widest px-3 py-1 font-bold">
-                                            {{ __('Coleção Privada') }}
-                                        </span>
-                                    @endif
-                                </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">{{ __('Search') }}</label>
+                                <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search...') }}" class="w-full rounded-lg border-gray-300 focus:border-accent focus:ring-accent text-sm">
+                            </div>
 
-                                {{-- Preço (Design Novo) --}}
-                                <div class="absolute bottom-0 right-0 bg-brand-primary text-white px-5 py-3 font-serif text-lg z-20 shadow-lg">
-                                    {{ $property->price ? number_format($property->price, 0, ',', '.') . ' €' : __('Sob Consulta') }}
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">{{ __('Transaction') }}</label>
+                                <div class="flex bg-gray-100 rounded-lg p-1">
+                                    <label class="flex-1 text-center cursor-pointer">
+                                        <input type="radio" name="transaction_type" value="sale" class="sr-only peer" {{ request('transaction_type') == 'sale' ? 'checked' : '' }}>
+                                        <span class="block py-2 text-xs font-bold text-gray-500 rounded-md peer-checked:bg-white peer-checked:text-accent peer-checked:shadow-sm transition-all">{{ __('Buy') }}</span>
+                                    </label>
+                                    <label class="flex-1 text-center cursor-pointer">
+                                        <input type="radio" name="transaction_type" value="rent" class="sr-only peer" {{ request('transaction_type') == 'rent' ? 'checked' : '' }}>
+                                        <span class="block py-2 text-xs font-bold text-gray-500 rounded-md peer-checked:bg-white peer-checked:text-accent peer-checked:shadow-sm transition-all">{{ __('Rent') }}</span>
+                                    </label>
                                 </div>
                             </div>
 
-                            {{-- Info --}}
-                            <div class="p-6 flex flex-col flex-grow border border-gray-100 border-t-0 bg-white relative z-20">
-                                <div class="flex justify-between items-center mb-4">
-                                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-sand flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-brand-sand"></span>
-                                        {{ $property->location ?? 'Portugal' }}
-                                    </span>
-                                </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">{{ __('City') }}</label>
+                                <select name="city" class="w-full rounded-lg border-gray-300 focus:border-accent focus:ring-accent text-sm">
+                                    <option value="">{{ __('All') }}</option>
+                                    @foreach(['Lisboa','Porto','Cascais','Faro','Braga','Coimbra'] as $city)
+                                        <option value="{{ $city }}" {{ request('city') == $city ? 'selected' : '' }}>{{ $city }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                                <h3 class="text-xl font-serif text-brand-secondary mb-4 leading-tight group-hover:text-brand-primary transition-colors">
-                                    <a href="{{ route('properties.show', $property->slug) }}">
-                                        {{ $property->title }}
-                                    </a>
-                                </h3>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">{{ __('Property Type') }}</label>
+                                <select name="type" class="w-full rounded-lg border-gray-300 focus:border-accent focus:ring-accent text-sm">
+                                    <option value="">{{ __('All') }}</option>
+                                    @foreach(['apartment','house','villa','land','commercial','office'] as $type)
+                                        <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>{{ __(ucfirst($type)) }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                                <p class="text-gray-500 text-xs font-light line-clamp-2 mb-6 leading-relaxed">
-                                    {{ $property->description }}
-                                </p>
-
-                                <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400 font-mono">
-                                    @if($property->bedrooms)
-                                        <span class="flex items-center gap-2" title="{{ __('Quartos') }}">
-                                            {{ $property->bedrooms }} {{ __('Quartos') }}
-                                        </span>
-                                    @endif
-                                    
-                                    @if($property->area_gross)
-                                        <span class="flex items-center gap-2" title="{{ __('Área Bruta') }}">
-                                            {{ number_format($property->area_gross, 0) }} m²
-                                        </span>
-                                    @endif
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">{{ __('Price') }}</label>
+                                <div class="flex gap-2">
+                                    <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Min" class="w-full rounded-lg border-gray-300 focus:border-accent focus:ring-accent text-sm">
+                                    <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Max" class="w-full rounded-lg border-gray-300 focus:border-accent focus:ring-accent text-sm">
                                 </div>
                             </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-2">{{ __('Bedrooms') }}</label>
+                                <div class="flex gap-2">
+                                    @foreach([1,2,3,4] as $bed)
+                                        <label class="flex-1 cursor-pointer">
+                                            <input type="radio" name="bedrooms" value="{{ $bed }}" class="sr-only peer" {{ request('bedrooms') == $bed ? 'checked' : '' }}>
+                                            <div class="py-2 text-center text-xs font-bold border border-gray-200 rounded-lg peer-checked:border-accent peer-checked:bg-accent/5 peer-checked:text-accent hover:border-gray-300 transition-all">
+                                                {{ $bed }}+
+                                            </div>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-graphite hover:bg-black text-white font-bold py-3 rounded-lg transition-colors shadow-lg">
+                                {{ __('Apply Filters') }}
+                            </button>
+                        </form>
+                    </div>
+                </aside>
+
+                <div class="flex-1">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h2 class="text-2xl font-heading font-bold text-graphite">{{ __('Properties') }}</h2>
+                            <p class="text-gray-500 text-sm mt-1">{{ $properties->total() }} {{ __('results') }}</p>
                         </div>
-                    @empty
-                        <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-24 bg-white border border-dashed border-gray-300">
-                            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                            </div>
-                            <h3 class="font-serif text-xl text-brand-secondary mb-2">{{ __('Sem Resultados') }}</h3>
-                            <p class="text-gray-500 mb-6 text-sm font-light">{{ __('Não encontramos imóveis com os critérios definidos no Private Office.') }}</p>
-                            <a href="{{ route('portfolio') }}" class="inline-block px-8 py-3 bg-brand-secondary text-white text-xs font-bold uppercase tracking-widest hover:bg-brand-primary transition-colors">
-                                {{ __('Ver Coleção Completa') }}
-                            </a>
-                        </div>
-                    @endforelse
-                </div>
+                    </div>
 
-                <div class="mt-16">
-                    {{ $properties->links() }}
+                    @if($properties->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach($properties as $property)
+                                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
+                                    <div class="relative aspect-[4/3] overflow-hidden">
+                                        <a href="{{ route('properties.show', $property) }}">
+                                            @if($property->cover_image)
+                                                <img src="{{ Storage::url($property->cover_image) }}" alt="{{ $property->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                            @elseif($property->images && count($property->images) > 0)
+                                                <img src="{{ Storage::url($property->images[0]) }}" alt="{{ $property->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                            @else
+                                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                                    <span class="text-gray-400">{{ __('No Image') }}</span>
+                                                </div>
+                                            @endif
+                                        </a>
+                                        
+                                        <div class="absolute top-4 left-4">
+                                            <span class="bg-white/90 backdrop-blur-sm text-graphite px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm">
+                                                {{ __(ucfirst($property->type)) }}
+                                            </span>
+                                        </div>
+
+                                        @if($property->is_exclusive)
+                                            <div class="absolute top-4 right-4">
+                                                <span class="bg-accent text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm">
+                                                    {{ __('Off-Market') }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="p-5 flex flex-col flex-1">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h3 class="text-lg font-bold text-graphite line-clamp-1 group-hover:text-accent transition-colors">
+                                                <a href="{{ route('properties.show', $property) }}">{{ $property->title }}</a>
+                                            </h3>
+                                        </div>
+                                        <p class="text-gray-500 text-xs mb-4 flex items-center gap-1 uppercase tracking-wide">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                            {{ $property->city }}
+                                        </p>
+
+                                        <div class="flex items-center gap-4 text-sm text-gray-600 mb-6 mt-auto">
+                                            <span class="flex items-center gap-1"><span class="font-bold">{{ $property->bedrooms }}</span> {{ __('Bedrooms') }}</span>
+                                            <span class="flex items-center gap-1"><span class="font-bold">{{ $property->area }}</span> m²</span>
+                                        </div>
+
+                                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                            <span class="text-xl font-bold text-graphite">{{ $property->formatted_price }}</span>
+                                            <a href="{{ route('properties.show', $property) }}" class="text-accent font-medium hover:underline text-sm">{{ __('View') }} &rarr;</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div class="mt-12">
+                            {{ $properties->links() }}
+                        </div>
+                    @else
+                        <div class="text-center py-20 bg-white rounded-xl border border-gray-100 shadow-sm">
+                            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-graphite mb-1">{{ __('No properties found') }}</h3>
+                            <p class="text-gray-500 text-sm">{{ __('Try adjusting your filters.') }}</p>
+                            <a href="{{ route('properties.index') }}" class="inline-block mt-4 text-accent font-bold hover:underline">{{ __('Clear Filters') }}</a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </main>
 
-@endsection
+    @include('components.footer')
+</x-public-layout>

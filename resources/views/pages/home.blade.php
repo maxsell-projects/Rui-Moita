@@ -6,7 +6,6 @@
 @section('content')
 
     {{-- 1. HERO: A AUTORIDADE SILENCIOSA --}}
-    {{-- Mudamos para 'intellectus-base' (Preto/Azul Profundo) para dar contraste com o Dourado --}}
     <section class="relative min-h-screen flex items-center bg-intellectus-base text-white overflow-hidden pt-32 lg:pt-20">
         
         {{-- Background Pattern (Sutil) --}}
@@ -14,7 +13,7 @@
              style="background-image: linear-gradient(#C5A059 1px, transparent 1px), linear-gradient(90deg, #C5A059 1px, transparent 1px); background-size: 80px 80px;">
         </div>
 
-        {{-- Imagem de Fundo (Opcional - se quiser textura) --}}
+        {{-- Imagem de Fundo --}}
         <div class="absolute inset-0 z-0 opacity-20 mix-blend-overlay">
              <img src="{{ asset('img/porto_dark.jpeg') }}" alt="Background" class="w-full h-full object-cover">
         </div>
@@ -69,7 +68,7 @@
         </div>
     </section>
 
-    {{-- 3. PILARES (Grid Minimalista) --}}
+    {{-- 3. PILARES --}}
     <section class="py-24 bg-white border-t border-gray-100">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-100">
@@ -89,12 +88,11 @@
         </div>
     </section>
 
-    {{-- 4. O CONSULTOR (Líder) --}}
+    {{-- 4. O CONSULTOR --}}
     <section class="py-24 bg-intellectus-base text-white relative overflow-hidden">
         <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="relative order-2 lg:order-1" data-aos="fade-right">
                 <div class="aspect-[3/4] bg-gray-800 relative overflow-hidden border border-white/10 group">
-                    {{-- Usando a imagem que você subiu --}}
                     <img src="{{ asset('img/1.jpeg') }}" alt="{{ __('Rui Moita') }}" class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-1000 opacity-90 hover:opacity-100">
                 </div>
                 <div class="absolute -bottom-6 -right-6 bg-intellectus-accent text-intellectus-base p-6 w-56 shadow-2xl">
@@ -120,7 +118,7 @@
         </div>
     </section>
 
-    {{-- [NOVA DOBRA 1] EQUIPA / INTELLIGENCE COLLECTIVE --}}
+    {{-- EQUIPA --}}
     <section class="py-24 bg-white border-b border-gray-100">
         <div class="container mx-auto px-6 text-center max-w-4xl" data-aos="zoom-in">
             <span class="text-xs font-bold uppercase tracking-[0.2em] text-intellectus-muted mb-4 block">{{ __('A Nossa Estrutura') }}</span>
@@ -136,7 +134,7 @@
         </div>
     </section>
 
-    {{-- 5. ATUAÇÃO / SOLUÇÕES --}}
+    {{-- ATUAÇÃO --}}
     <section id="atuacao" class="py-24 bg-intellectus-surface">
         <div class="container mx-auto px-6">
             <div class="mb-16">
@@ -166,7 +164,7 @@
         </div>
     </section>
 
-    {{-- [NOVA DOBRA 2] RECRUTAMENTO --}}
+    {{-- RECRUTAMENTO --}}
     <section class="py-0 bg-intellectus-base text-white">
         <div class="grid grid-cols-1 lg:grid-cols-2">
             <div class="relative h-96 lg:h-auto min-h-[400px] overflow-hidden group">
@@ -190,11 +188,10 @@
         </div>
     </section>
 
-    {{-- 6. RESPALDO (Testemunhos) --}}
+    {{-- TESTEMUNHOS --}}
     <section class="py-24 bg-white border-b border-gray-100">
         <div class="container mx-auto px-6">
             <h2 class="font-serif text-3xl text-center mb-16 text-intellectus-primary">{{ __('A confiança de quem decide.') }}</h2>
-            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
                 <div class="text-center px-4" data-aos="fade-up" data-aos-delay="0">
                     <div class="text-intellectus-accent text-4xl font-serif mb-4">“</div>
@@ -203,7 +200,6 @@
                     </p>
                     <p class="text-xs font-bold uppercase tracking-widest text-gray-400">{{ __('Dr. Ricardo S., Investidor') }}</p>
                 </div>
-
                 <div class="text-center px-4 border-l border-r border-gray-100" data-aos="fade-up" data-aos-delay="150">
                     <div class="text-intellectus-accent text-4xl font-serif mb-4">“</div>
                     <p class="font-serif text-lg text-gray-600 italic mb-6">
@@ -211,7 +207,6 @@
                     </p>
                     <p class="text-xs font-bold uppercase tracking-widest text-gray-400">{{ __('Ana P., CEO') }}</p>
                 </div>
-
                 <div class="text-center px-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="text-intellectus-accent text-4xl font-serif mb-4">“</div>
                     <p class="font-serif text-lg text-gray-600 italic mb-6">
@@ -223,7 +218,7 @@
         </div>
     </section>
 
-    {{-- 7. FORMULÁRIO / CTA FINAL --}}
+    {{-- 7. FORMULÁRIO DE PEDIDO DE ACESSO --}}
     <section id="analise-estrategica" class="py-24 bg-intellectus-primary relative text-white">
         <div class="container mx-auto px-6 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
@@ -244,7 +239,9 @@
                 </div>
 
                 <div class="lg:col-span-8 bg-white p-10 lg:p-16 shadow-2xl rounded-sm">
-                    <form action="{{ route('contact.send') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-800">
+                    {{-- FORMULÁRIO --}}
+                    {{-- Este formulário enviará para a rota de Access Request --}}
+                    <form action="{{ route('access-request.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-800">
                         @csrf
                         
                         <div class="col-span-2 md:col-span-1 group">
@@ -264,39 +261,40 @@
 
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Localização de Interesse *') }}</label>
-                            <input type="text" name="location" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="{{ __('Ex: Cascais, Estoril...') }}">
+                            <input type="text" name="country" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="{{ __('Ex: Cascais, Estoril...') }}">
                         </div>
 
                         <div class="col-span-2">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-4">{{ __('Objetivo da Operação *') }}</label>
+                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-4">{{ __('Perfil de Investidor *') }}</label>
                             <div class="flex flex-wrap gap-4">
-                                @foreach(['Comprar', 'Vender', 'Investir', 'Arrendar'] as $obj)
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="objective" value="{{ $obj }}" class="peer sr-only">
-                                    <span class="px-6 py-3 border border-gray-200 text-xs uppercase tracking-widest text-gray-500 peer-checked:bg-intellectus-primary peer-checked:text-white peer-checked:border-intellectus-primary transition-all">{{ __($obj) }}</span>
+                                    <input type="radio" name="investor_type" value="individual" required class="peer sr-only">
+                                    <span class="px-6 py-3 border border-gray-200 text-xs uppercase tracking-widest text-gray-500 peer-checked:bg-intellectus-primary peer-checked:text-white peer-checked:border-intellectus-primary transition-all">{{ __('Individual') }}</span>
                                 </label>
-                                @endforeach
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="investor_type" value="developer" class="peer sr-only">
+                                    <span class="px-6 py-3 border border-gray-200 text-xs uppercase tracking-widest text-gray-500 peer-checked:bg-intellectus-primary peer-checked:text-white peer-checked:border-intellectus-primary transition-all">{{ __('Developer / Fundo') }}</span>
+                                </label>
                             </div>
                         </div>
 
                         <div class="col-span-2 md:col-span-1 group">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">{{ __('Tipologia') }}</label>
-                            <select name="typology" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
+                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">{{ __('Investimento Previsto') }}</label>
+                            <select name="investment_amount" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
                                 <option value="">{{ __('Selecione...') }}</option>
-                                <option value="T1/T2">{{ __('Apartamento (T1/T2)') }}</option>
-                                <option value="T3+">{{ __('Apartamento Familiar (T3+)') }}</option>
-                                <option value="Villa">{{ __('Villa / Moradia') }}</option>
-                                <option value="Terreno">{{ __('Terreno / Desenvolvimento') }}</option>
+                                <option value="< 500k">Até 500k€</option>
+                                <option value="500k - 1M">500k€ - 1M€</option>
+                                <option value="1M - 3M">1M€ - 3M€</option>
+                                <option value="> 3M">Mais de 3M€</option>
                             </select>
                         </div>
 
                         <div class="col-span-2 md:col-span-1 group">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">{{ __('Prazo Pretendido') }}</label>
+                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">{{ __('Prazo') }}</label>
                             <select name="timeline" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
-                                <option value="imediato">{{ __('0 meses (Imediato)') }}</option>
+                                <option value="imediato">{{ __('Imediato') }}</option>
                                 <option value="3m">{{ __('Até 3 meses') }}</option>
                                 <option value="6m">{{ __('Até 6 meses') }}</option>
-                                <option value="futuro">{{ __('Mais de 6 meses') }}</option>
                             </select>
                         </div>
 

@@ -1,13 +1,16 @@
-<x-app-layout>
+@extends('layouts.admin')
+
+@section('content')
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
+            {{-- Cabeçalho da Página --}}
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.access-requests') }}" class="p-2 bg-white rounded-full text-gray-500 hover:text-accent shadow-sm transition-colors">
+                    <a href="{{ route('admin.access-requests') }}" class="p-2 bg-white rounded-full text-gray-500 hover:text-intellectus-accent shadow-sm transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     </a>
-                    <h2 class="text-2xl font-bold text-graphite font-heading">
+                    <h2 class="text-2xl font-bold text-intellectus-primary font-serif">
                         {{ __('messages.request_details', ['id' => $accessRequest->id]) }}
                     </h2>
                 </div>
@@ -23,6 +26,7 @@
                 </div>
             </div>
 
+            {{-- Mensagens de Sucesso/Erro --}}
             @if(session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg relative mb-6 shadow-sm flex items-start gap-3" role="alert">
                     <svg class="w-6 h-6 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -45,11 +49,14 @@
                 </div>
             @endif
 
+            {{-- Grid Principal --}}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                {{-- Coluna da Esquerda (Info + Mensagem) --}}
                 <div class="lg:col-span-2 space-y-6">
                     <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100">
-                        <div class="px-6 py-5 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                            <h3 class="text-lg font-bold text-graphite font-heading">{{ __('messages.main_info') }}</h3>
+                        <div class="px-6 py-5 border-b border-gray-100 bg-intellectus-surface flex justify-between items-center">
+                            <h3 class="text-lg font-bold text-intellectus-primary font-serif">{{ __('messages.main_info') }}</h3>
                             @if($accessRequest->user)
                                 <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-bold">{{ __('messages.existing_user') }}</span>
                             @endif
@@ -57,22 +64,22 @@
                         <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{{ __('messages.name') }}</label>
-                                <div class="text-base font-semibold text-graphite">{{ $accessRequest->name }}</div>
+                                <div class="text-base font-semibold text-intellectus-primary">{{ $accessRequest->name }}</div>
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{{ __('messages.email') }}</label>
-                                <div class="text-base text-graphite">{{ $accessRequest->email }}</div>
+                                <div class="text-base text-intellectus-primary">{{ $accessRequest->email }}</div>
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{{ __('messages.location') }}</label>
-                                <div class="text-base text-graphite flex items-center gap-2">
+                                <div class="text-base text-intellectus-primary flex items-center gap-2">
                                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     {{ $accessRequest->country }}
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{{ __('messages.type') }}</label>
-                                <div class="text-base text-graphite">
+                                <div class="text-base text-intellectus-primary">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $accessRequest->investor_type === 'developer' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800' }}">
                                         {{ ucfirst($accessRequest->investor_type) }}
                                     </span>
@@ -80,18 +87,18 @@
                             </div>
                             <div class="md:col-span-2">
                                 <label class="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">{{ __('messages.investment') }}</label>
-                                <div class="text-lg font-bold text-accent">{{ $accessRequest->investment_amount ?? '-' }}</div>
+                                <div class="text-lg font-bold text-intellectus-accent">{{ $accessRequest->investment_amount ?? '-' }}</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100">
-                        <div class="px-6 py-5 border-b border-gray-100 bg-gray-50">
-                            <h3 class="text-lg font-bold text-graphite font-heading">{{ __('messages.description_label') }}</h3>
+                        <div class="px-6 py-5 border-b border-gray-100 bg-intellectus-surface">
+                            <h3 class="text-lg font-bold text-intellectus-primary font-serif">{{ __('messages.description_label') }}</h3>
                         </div>
                         <div class="p-6">
                             @if($accessRequest->message)
-                                <div class="prose max-w-none text-gray-600 bg-gray-50 p-4 rounded-lg italic border-l-4 border-accent">
+                                <div class="prose max-w-none text-gray-600 bg-gray-50 p-4 rounded-lg italic border-l-4 border-intellectus-accent">
                                     "{{ $accessRequest->message }}"
                                 </div>
                             @else
@@ -101,12 +108,13 @@
                     </div>
                 </div>
 
+                {{-- Coluna da Direita (Ações + Documentos) --}}
                 <div class="lg:col-span-1 space-y-6">
                     
                     @if($accessRequest->status === 'pending')
-                    <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-accent/20">
+                    <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-intellectus-accent/20">
                         <div class="p-6 space-y-4">
-                            <h3 class="text-lg font-bold text-graphite font-heading mb-4">{{ __('messages.management') }}</h3>
+                            <h3 class="text-lg font-bold text-intellectus-primary font-serif mb-4">{{ __('messages.management') }}</h3>
                             
                             <form method="POST" action="{{ route('admin.access-requests.approve', $accessRequest) }}">
                                 @csrf
@@ -139,9 +147,9 @@
                     
                     @elseif($accessRequest->status === 'approved' && $accessRequest->user)
                     <div class="bg-white overflow-hidden shadow-lg rounded-xl border border-gray-200">
-                        <div class="bg-gray-800 px-6 py-4 border-b border-gray-700">
-                            <h3 class="text-lg font-bold text-white font-heading flex items-center gap-2">
-                                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <div class="bg-intellectus-primary px-6 py-4 border-b border-gray-700">
+                            <h3 class="text-lg font-bold text-white font-serif flex items-center gap-2">
+                                <svg class="w-5 h-5 text-intellectus-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                 {{ __('messages.investor_management') }}
                             </h3>
                         </div>
@@ -184,8 +192,8 @@
                     @endif
 
                     <div class="bg-white overflow-hidden shadow-sm rounded-xl border border-gray-100">
-                        <div class="px-6 py-5 border-b border-gray-100 bg-gray-50">
-                            <h3 class="text-lg font-bold text-graphite font-heading">Documentação</h3>
+                        <div class="px-6 py-5 border-b border-gray-100 bg-intellectus-surface">
+                            <h3 class="text-lg font-bold text-intellectus-primary font-serif">Documentação</h3>
                         </div>
                         <div class="p-6">
                             @if($accessRequest->proof_document)
@@ -209,7 +217,7 @@
                                     @else
                                         <div class="flex items-center justify-center gap-2 text-gray-500">
                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                            <a href="{{ Storage::url($accessRequest->proof_document) }}" target="_blank" class="text-accent hover:underline">Download Arquivo</a>
+                                            <a href="{{ Storage::url($accessRequest->proof_document) }}" target="_blank" class="text-intellectus-accent hover:underline">Download Arquivo</a>
                                         </div>
                                     @endif
                                 </div>
@@ -225,4 +233,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
