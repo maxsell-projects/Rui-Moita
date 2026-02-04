@@ -109,7 +109,7 @@
                 <ul class="space-y-4 font-sans text-sm text-gray-300 mb-12">
                     <li class="flex items-center gap-4"><span class="w-8 h-px bg-intellectus-accent"></span> {{ __('Especialista em Investimento') }}</li>
                     <li class="flex items-center gap-4"><span class="w-8 h-px bg-intellectus-accent"></span> {{ __('Consultoria Jurídica Imobiliária') }}</li>
-                    <li class="flex items-center gap-4"><span class="w-8 h-px bg-intellectus-accent"></span> {{ __('Gestão de Portfólio Familiar') }}</li>
+                    <li class="flex items-center gap-4"><span class="w-8 h-px bg-intellectus-accent"></span> {{ __('Gestão de Portfólio') }}</li>
                 </ul>
 
                 <p class="font-serif text-2xl italic text-intellectus-accent">Rui Moita</p>

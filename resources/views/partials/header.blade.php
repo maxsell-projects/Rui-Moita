@@ -10,12 +10,12 @@
     <div class="container mx-auto px-6">
         <div class="flex items-center justify-between">
             
-            {{-- 1. LOGO --}}
+            {{-- 1. LOGO (Tamanho Reduzido) --}}
             <a href="{{ route('home') }}" class="relative z-50 group block" @click="mobileMenuOpen = false">
-                {{-- Certifique-se de que a imagem existe em public/img/Ativo_8.png --}}
+                {{-- Reduzi as classes de altura: h-8 (mobile) até h-12 (desktop) --}}
                 <img src="{{ asset('img/Ativo_8.png') }}" 
                      alt="Intellectus | Rui Moita Private Office" 
-                     class="h-10 sm:h-12 md:h-16 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
+                     class="h-8 sm:h-9 md:h-10 lg:h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
             </a>
 
             {{-- 2. DESKTOP MENU --}}

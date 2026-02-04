@@ -10,7 +10,6 @@ use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\Api\ChatbotController;
 use App\Http\Controllers\AccessRequestController;
 use App\Http\Controllers\Admin\ConsultantController;
-// 👇 Importação necessária para o Logout
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 
@@ -64,13 +63,13 @@ Route::get('language/{locale}', function ($locale) {
 
 // Legal
 Route::controller(LegalController::class)->group(function () {
-    Route::get('/politica-privacidade', 'privacy')->name('privacy');
+    Route::get('/politica-privacidade', 'privacy')->name('legal.privacy'); // Nome corrigido
     Route::get('/termos-servico', 'terms')->name('terms');
     Route::get('/politica-cookies', 'cookies')->name('legal.cookies'); 
     Route::get('/aviso-legal', 'notice')->name('legal.notice');
 });
 
-// Leads
+// Leads & Requests (Formulário da Home)
 Route::post('/imoveis/{property}/visit', [PropertyController::class, 'sendVisitRequest'])->name('properties.visit');
 Route::post('/imoveis/{property}/contact', [PropertyController::class, 'sendContact'])->name('properties.contact');
 Route::post('/access-request', [AccessRequestController::class, 'store'])->name('access-request.store');
@@ -123,44 +122,44 @@ Route::middleware(['auth', 'active_access'])->group(function () {
     Route::middleware('can:isAdmin,App\Models\User')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         
-        // 👇 AQUI ESTÁ A CORREÇÃO: Rota de Logout do Admin
+        // Rota de Logout do Admin
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-        // Consultores
+        // Consultores (Resource cria automaticamente admin.consultants.index, create, store, etc.)
         Route::resource('consultants', ConsultantController::class);
 
-        // Gestão de Imóveis (CRUD Admin)
+        // Gestão de Imóveis (CRUD Admin - Rotas Manuais para evitar conflito com Resource)
         Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
         Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
         Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
         Route::put('/properties/{property}', [PropertyController::class, 'update'])->name('properties.update');
-        Route::get('/properties', [AdminController::class, 'properties'])->name('properties.index'); // Fixed
+        Route::get('/properties', [AdminController::class, 'properties'])->name('properties.index'); 
         Route::delete('/properties/{property}', [AdminController::class, 'deleteProperty'])->name('properties.destroy');
 
-        // Aprovação
+        // Aprovação de Imóveis
         Route::get('/properties/pending', [AdminController::class, 'pendingProperties'])->name('properties.pending');
         Route::patch('/properties/{property}/approve-listing', [PropertyController::class, 'approve'])->name('properties.approve-listing');
         Route::patch('/properties/{property}/reject-listing', [PropertyController::class, 'reject'])->name('properties.reject-listing');
 
-        // Requests
+        // Pedidos de Acesso (Access Requests)
         Route::get('/access-requests', [AccessRequestController::class, 'index'])->name('access-requests');
         Route::get('/access-requests/{accessRequest}', [AccessRequestController::class, 'show'])->name('access-requests.show');
         Route::patch('/access-requests/{accessRequest}/approve', [AccessRequestController::class, 'approve'])->name('access-requests.approve');
         Route::patch('/access-requests/{accessRequest}/reject', [AccessRequestController::class, 'reject'])->name('access-requests.reject');
         
-        // Requests Exclusivos
+        // Carteiras / Requests Exclusivos
         Route::get('/exclusive-requests', [AdminController::class, 'exclusiveRequests'])->name('exclusive-requests');
         Route::patch('/exclusive-requests/{user}/approve', [AdminController::class, 'approveExclusiveRequest'])->name('exclusive-requests.approve');
         Route::delete('/exclusive-requests/{user}/reject', [AdminController::class, 'rejectExclusiveRequest'])->name('exclusive-requests.reject');
 
-        // Usuários
+        // Gestão de Usuários
         Route::patch('/users/{user}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('users.toggle-status');
         Route::patch('/users/{user}/reset-password', [AdminController::class, 'resetUserPassword'])->name('users.reset-password');
         Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.delete');
     });
 });
 
-// 4. Wildcard
+// 4. Wildcard (Detalhe do Imóvel - deve ser o último)
 Route::get('/imoveis/{property}', [PropertyController::class, 'show'])->name('properties.show');
 
 require __DIR__.'/auth.php';
