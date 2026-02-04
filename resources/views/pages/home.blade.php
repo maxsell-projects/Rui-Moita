@@ -218,15 +218,15 @@
         </div>
     </section>
 
-    {{-- 7. FORMULÁRIO DE PEDIDO DE ACESSO --}}
+    {{-- 7. FORMULÁRIO DE ACESSO OFF-MARKET --}}
     <section id="analise-estrategica" class="py-24 bg-intellectus-primary relative text-white">
         <div class="container mx-auto px-6 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
                 
                 <div class="lg:col-span-4">
-                    <h2 class="font-serif text-4xl mb-6">{{ __('Solicitar Análise Estratégica') }}</h2>
+                    <h2 class="font-serif text-4xl mb-6">{{ __('Solicitar Acesso Off-Market') }}</h2>
                     <p class="text-gray-400 font-light mb-8 text-justify">
-                        {{ __('Para garantir a excelência do nosso atendimento, trabalhamos com um número limitado de clientes. Preencha o formulário para agendar uma consultoria confidencial.') }}
+                        {{ __('Aceda a oportunidades exclusivas e não listadas no mercado aberto. O nosso Private Office garante total confidencialidade.') }}
                     </p>
                     <div class="h-px w-12 bg-intellectus-accent mb-8"></div>
                     
@@ -239,11 +239,20 @@
                 </div>
 
                 <div class="lg:col-span-8 bg-white p-10 lg:p-16 shadow-2xl rounded-sm">
-                    {{-- FORMULÁRIO --}}
-                    {{-- Este formulário enviará para a rota de Access Request --}}
-                    <form action="{{ route('access-request.store') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-800">
+                    
+                    {{-- Adaptamos o formulário para o Back-end EXISTENTE --}}
+                    {{-- Usamos Alpine.js (x-data) para concatenar Phone e Timeline na mensagem --}}
+                    
+                    <form action="{{ route('access-request.store') }}" method="POST" 
+                          class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-800"
+                          x-data="{ phone: '', timeline: '' }" 
+                          @submit="document.getElementById('hidden_message').value = 'Telefone: ' + phone + ' | Prazo: ' + timeline">
+                        
                         @csrf
                         
+                        {{-- Campo Oculto para Mensagem (Recebe Telefone e Prazo) --}}
+                        <input type="hidden" name="message" id="hidden_message">
+
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Nome Completo *') }}</label>
                             <input type="text" name="name" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="{{ __('Seu nome') }}">
@@ -254,9 +263,10 @@
                             <input type="email" name="email" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="email@exemplo.com">
                         </div>
 
+                        {{-- TELEFONE (Visual apenas, vai para message via JS) --}}
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Telefone *') }}</label>
-                            <input type="tel" name="phone" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="+351 ...">
+                            <input type="tel" x-model="phone" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="+351 ...">
                         </div>
 
                         <div class="col-span-2 md:col-span-1 group">
@@ -268,7 +278,8 @@
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-4">{{ __('Perfil de Investidor *') }}</label>
                             <div class="flex flex-wrap gap-4">
                                 <label class="cursor-pointer">
-                                    <input type="radio" name="investor_type" value="individual" required class="peer sr-only">
+                                    {{-- Value ajustado para 'client' conforme validação do backend --}}
+                                    <input type="radio" name="investor_type" value="client" required class="peer sr-only">
                                     <span class="px-6 py-3 border border-gray-200 text-xs uppercase tracking-widest text-gray-500 peer-checked:bg-intellectus-primary peer-checked:text-white peer-checked:border-intellectus-primary transition-all">{{ __('Individual') }}</span>
                                 </label>
                                 <label class="cursor-pointer">
@@ -289,18 +300,21 @@
                             </select>
                         </div>
 
+                        {{-- PRAZO (Visual apenas, vai para message via JS) --}}
                         <div class="col-span-2 md:col-span-1 group">
                             <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">{{ __('Prazo') }}</label>
-                            <select name="timeline" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
-                                <option value="imediato">{{ __('Imediato') }}</option>
-                                <option value="3m">{{ __('Até 3 meses') }}</option>
-                                <option value="6m">{{ __('Até 6 meses') }}</option>
+                            <select x-model="timeline" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
+                                <option value="">{{ __('Selecione...') }}</option>
+                                <option value="Imediato">{{ __('Imediato') }}</option>
+                                <option value="Até 3 meses">{{ __('Até 3 meses') }}</option>
+                                <option value="Até 6 meses">{{ __('Até 6 meses') }}</option>
                             </select>
                         </div>
 
                         <div class="col-span-2 mt-4 pt-4 border-t border-gray-50">
                             <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" name="privacy_policy" required class="mt-1 text-intellectus-accent border-gray-300 rounded focus:ring-intellectus-accent">
+                                {{-- Name ajustado para 'consent' conforme validação do backend --}}
+                                <input type="checkbox" name="consent" required class="mt-1 text-intellectus-accent border-gray-300 rounded focus:ring-intellectus-accent">
                                 <span class="text-xs text-gray-400 leading-relaxed">
                                     {{ __('Li e aceito a') }} <a href="{{ route('terms') }}" class="underline hover:text-intellectus-primary">{{ __('Política de Privacidade') }}</a>. 
                                     {{ __('Autorizo o tratamento dos meus dados para efeitos de resposta a este pedido de análise.') }}
@@ -310,7 +324,7 @@
 
                         <div class="col-span-2 mt-2">
                             <button type="submit" class="w-full bg-intellectus-base text-white py-5 font-bold uppercase tracking-widest text-xs hover:bg-intellectus-primary transition-all duration-300 shadow-lg hover:shadow-xl">
-                                {{ __('Enviar Pedido de Análise') }}
+                                {{ __('Enviar Pedido de Acesso') }}
                             </button>
                         </div>
                     </form>
