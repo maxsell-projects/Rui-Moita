@@ -42,7 +42,13 @@
     
     {{-- ESTRUTURA PRINCIPAL --}}
     <div class="min-h-screen flex flex-col">
-        {{ $slot }}
+        {{-- Conteúdo Principal com Flex Grow para empurrar o footer --}}
+        <main class="flex-grow">
+            {{ $slot }}
+        </main>
+
+        {{-- FOOTER GLOBAL (CORREÇÃO APLICADA) --}}
+        @include('partials.footer')
     </div>
 
     {{-- COMPONENTE DE COOKIES --}}

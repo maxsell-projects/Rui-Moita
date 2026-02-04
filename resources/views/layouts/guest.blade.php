@@ -25,19 +25,27 @@
     </head>
     <body class="font-sans text-intellectus-text antialiased bg-intellectus-surface selection:bg-intellectus-primary selection:text-white relative">
         
-        {{-- Slot de Conteúdo (Login/Register Forms) --}}
-        <div class="min-h-screen flex flex-col justify-center items-center pt-6 sm:pt-0">
-            {{-- Opcional: Logo Link acima do form --}}
-            <div class="mb-6">
-                <a href="/">
-                    <img src="{{ asset('images/hero.png') }}" class="w-20 h-20 fill-current text-intellectus-primary" alt="Intellectus Logo" />
-                </a>
-            </div>
+        {{-- WRAPPER PRINCIPAL (Alterado para suportar Footer) --}}
+        <div class="min-h-screen flex flex-col justify-between">
+            
+            {{-- CONTEÚDO CENTRALIZADO (Login/Register) --}}
+            <main class="flex-grow flex flex-col justify-center items-center pt-6 sm:pt-0">
+                {{-- Logo Link acima do form --}}
+                <div class="mb-6">
+                    <a href="/">
+                        <img src="{{ asset('images/hero.png') }}" class="w-20 h-20 fill-current text-intellectus-primary" alt="Intellectus Logo" />
+                    </a>
+                </div>
 
-            {{-- Container do Formulário --}}
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-2xl overflow-hidden sm:rounded-lg border-t-4 border-intellectus-accent">
-                {{ $slot }}
-            </div>
+                {{-- Container do Formulário --}}
+                <div class="w-full sm:max-w-md px-6 py-4 bg-white shadow-2xl overflow-hidden sm:rounded-lg border-t-4 border-intellectus-accent">
+                    {{ $slot }}
+                </div>
+            </main>
+
+            {{-- FOOTER INCLUÍDO AQUI --}}
+            @include('partials.footer')
+
         </div>
 
         {{-- Floating Action Buttons --}}
