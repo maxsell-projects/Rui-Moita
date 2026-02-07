@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- 1. HERO: INSTITUCIONAL & SOBRIEDADE --}}
-<section class="relative min-h-[60vh] flex items-center justify-center bg-[#0A0F14] text-white overflow-hidden pt-32 lg:pt-40 pb-20">
+<section class="relative min-h-[50vh] flex items-center justify-center bg-[#0A0F14] text-white overflow-hidden pt-32 lg:pt-40 pb-20">
     
     {{-- Textura de fundo sutil --}}
     <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
@@ -14,21 +14,21 @@
     <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-secondary/20 to-transparent pointer-events-none"></div>
 
     <div class="container mx-auto px-6 relative z-10 text-center" data-aos="fade-up">
-        <p class="text-brand-sand font-mono text-xs uppercase tracking-[0.4em] mb-12 flex items-center justify-center gap-4">
+        <p class="text-brand-sand font-mono text-xs uppercase tracking-[0.4em] mb-10 flex items-center justify-center gap-4">
             <span class="w-8 h-[1px] bg-brand-primary/50"></span>
             {{ __('Private Office') }}
             <span class="w-8 h-[1px] bg-brand-primary/50"></span>
         </p>
         
-        {{-- Substituição da Escrita pelo Logótipo Ativo_8 --}}
-        <div class="flex justify-center mb-12">
+        {{-- Logótipo Reduzido e Sem Efeitos conforme solicitado --}}
+        <div class="flex justify-center mb-10">
             <img src="{{ asset('img/Ativo_8.png') }}" 
                  alt="Intellectus Logo" 
-                 class="h-24 md:h-32 lg:h-40 w-auto object-contain brightness-0 invert shadow-2xl">
+                 class="h-16 md:h-20 lg:h-24 w-auto object-contain">
         </div>
         
         {{-- Linha vertical --}}
-        <div class="w-px h-24 bg-brand-primary/30 mx-auto"></div>
+        <div class="w-px h-20 bg-brand-primary/30 mx-auto"></div>
     </div>
 </section>
 
@@ -54,20 +54,24 @@
     <div class="container mx-auto px-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
+            {{-- Foto Editorial --}}
             <div class="lg:col-span-5 relative" data-aos="fade-right">
                 <div class="relative overflow-hidden aspect-[3/4] group shadow-2xl border border-gray-100">
                     <img src="{{ asset('img/1.jpeg') }}" 
                          alt="Rui Moita - Fundador Intellectus" 
                          class="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105">
                     
+                    {{-- Badge Minimalista --}}
                     <div class="absolute bottom-0 left-0 bg-brand-secondary text-white p-8 max-w-[85%] border-l-4 border-brand-primary">
                         <p class="font-serif text-3xl italic text-white">{{ __('15+ Anos') }}</p>
                         <p class="text-[10px] uppercase tracking-widest text-brand-sand mt-1">{{ __('De Experiência em Mercado Prime') }}</p>
                     </div>
                 </div>
+                {{-- Outline Decorativo --}}
                 <div class="absolute -z-10 top-6 -right-6 w-full h-full border border-brand-secondary/10"></div>
             </div>
 
+            {{-- Texto Bio --}}
             <div class="lg:col-span-7 space-y-12 pl-0 lg:pl-12">
                 <div data-aos="fade-up">
                     <h3 class="text-xs font-bold uppercase tracking-widest text-brand-primary mb-6 flex items-center gap-3">
@@ -91,6 +95,7 @@
                     </div>
                 </div>
 
+                {{-- Assinatura --}}
                 <div data-aos="fade-up" data-aos-delay="200" class="border-t border-gray-100 pt-8">
                     <p class="font-serif italic text-3xl text-brand-secondary">Rui Moita</p>
                     <p class="text-xs text-brand-primary uppercase tracking-widest mt-2">{{ __('Fundador & Senior Partner') }}</p>
