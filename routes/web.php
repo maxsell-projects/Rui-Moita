@@ -27,7 +27,11 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::controller(PageController::class)->group(function () {
     Route::get('/sobre', 'about')->name('about');
     Route::get('/equipa', 'team')->name('team');
+    
+    // Rotas de Recrutamento
     Route::get('/recrutamento', 'recruitment')->name('recruitment');
+    Route::post('/recrutamento', 'submitRecruitment')->name('recruitment.submit'); // Rota adicionada para corrigir o erro
+    
     Route::get('/servicos', 'services')->name('services');
     Route::get('/vender', 'sell')->name('sell');
     Route::get('/contactos', 'contact')->name('contact');
@@ -63,7 +67,7 @@ Route::get('language/{locale}', function ($locale) {
 
 // Legal
 Route::controller(LegalController::class)->group(function () {
-    Route::get('/politica-privacidade', 'privacy')->name('legal.privacy'); // Nome corrigido
+    Route::get('/politica-privacidade', 'privacy')->name('legal.privacy');
     Route::get('/termos-servico', 'terms')->name('terms');
     Route::get('/politica-cookies', 'cookies')->name('legal.cookies'); 
     Route::get('/aviso-legal', 'notice')->name('legal.notice');
@@ -125,10 +129,10 @@ Route::middleware(['auth', 'active_access'])->group(function () {
         // Rota de Logout do Admin
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-        // Consultores (Resource cria automaticamente admin.consultants.index, create, store, etc.)
+        // Consultores (Resource)
         Route::resource('consultants', ConsultantController::class);
 
-        // Gestão de Imóveis (CRUD Admin - Rotas Manuais para evitar conflito com Resource)
+        // Gestão de Imóveis (CRUD Admin)
         Route::get('/properties/create', [PropertyController::class, 'create'])->name('properties.create');
         Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
         Route::get('/properties/{property}/edit', [PropertyController::class, 'edit'])->name('properties.edit');
@@ -141,7 +145,7 @@ Route::middleware(['auth', 'active_access'])->group(function () {
         Route::patch('/properties/{property}/approve-listing', [PropertyController::class, 'approve'])->name('properties.approve-listing');
         Route::patch('/properties/{property}/reject-listing', [PropertyController::class, 'reject'])->name('properties.reject-listing');
 
-        // Pedidos de Acesso (Access Requests)
+        // Pedidos de Acesso
         Route::get('/access-requests', [AccessRequestController::class, 'index'])->name('access-requests');
         Route::get('/access-requests/{accessRequest}', [AccessRequestController::class, 'show'])->name('access-requests.show');
         Route::patch('/access-requests/{accessRequest}/approve', [AccessRequestController::class, 'approve'])->name('access-requests.approve');
@@ -159,7 +163,7 @@ Route::middleware(['auth', 'active_access'])->group(function () {
     });
 });
 
-// 4. Wildcard (Detalhe do Imóvel - deve ser o último)
+// 4. Wildcard (Detalhe do Imóvel)
 Route::get('/imoveis/{property}', [PropertyController::class, 'show'])->name('properties.show');
 
 require __DIR__.'/auth.php';

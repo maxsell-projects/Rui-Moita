@@ -1,5 +1,3 @@
-{{-- FILE: resources/views/about.blade.php --}}
-
 @extends('layouts.app')
 
 @section('title', __('A Visão | Intellectus Private Office'))
@@ -7,8 +5,6 @@
 @section('content')
 
 {{-- 1. HERO: INSTITUCIONAL & SOBRIEDADE --}}
-{{-- Alteração: Mudança de bg-brand-secondary para bg-[#0A0F14] (Dark Slate) para contraste com o Header --}}
-{{-- Alteração: Adicionado pt-32 lg:pt-40 para compensar o Header Fixo --}}
 <section class="relative min-h-[60vh] flex items-center justify-center bg-[#0A0F14] text-white overflow-hidden pt-32 lg:pt-40 pb-20">
     
     {{-- Textura de fundo sutil --}}
@@ -18,23 +14,25 @@
     <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-secondary/20 to-transparent pointer-events-none"></div>
 
     <div class="container mx-auto px-6 relative z-10 text-center" data-aos="fade-up">
-        <p class="text-brand-sand font-mono text-xs uppercase tracking-[0.4em] mb-8 flex items-center justify-center gap-4">
+        <p class="text-brand-sand font-mono text-xs uppercase tracking-[0.4em] mb-12 flex items-center justify-center gap-4">
             <span class="w-8 h-[1px] bg-brand-primary/50"></span>
             {{ __('Private Office') }}
             <span class="w-8 h-[1px] bg-brand-primary/50"></span>
         </p>
         
-        {{-- Alteração: "Rui Moita" -> "Intellectus" --}}
-        <h1 class="text-6xl md:text-9xl font-serif leading-none mb-8 text-white tracking-tight">
-            Intellectus
-        </h1>
+        {{-- Substituição da Escrita pelo Logótipo Ativo_8 --}}
+        <div class="flex justify-center mb-12">
+            <img src="{{ asset('img/Ativo_8.png') }}" 
+                 alt="Intellectus Logo" 
+                 class="h-24 md:h-32 lg:h-40 w-auto object-contain brightness-0 invert shadow-2xl">
+        </div>
         
         {{-- Linha vertical --}}
         <div class="w-px h-24 bg-brand-primary/30 mx-auto"></div>
     </div>
 </section>
 
-{{-- 2. MANIFESTO (Novo Texto) --}}
+{{-- 2. MANIFESTO --}}
 <section class="py-32 bg-brand-background">
     <div class="container mx-auto px-6 max-w-4xl text-center" data-aos="fade-up">
         <h2 class="text-2xl md:text-4xl font-serif text-brand-secondary leading-tight mb-12">
@@ -56,24 +54,20 @@
     <div class="container mx-auto px-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             
-            {{-- Foto Editorial --}}
             <div class="lg:col-span-5 relative" data-aos="fade-right">
                 <div class="relative overflow-hidden aspect-[3/4] group shadow-2xl border border-gray-100">
                     <img src="{{ asset('img/1.jpeg') }}" 
                          alt="Rui Moita - Fundador Intellectus" 
                          class="w-full h-full object-cover grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105">
                     
-                    {{-- Badge Minimalista --}}
                     <div class="absolute bottom-0 left-0 bg-brand-secondary text-white p-8 max-w-[85%] border-l-4 border-brand-primary">
                         <p class="font-serif text-3xl italic text-white">{{ __('15+ Anos') }}</p>
                         <p class="text-[10px] uppercase tracking-widest text-brand-sand mt-1">{{ __('De Experiência em Mercado Prime') }}</p>
                     </div>
                 </div>
-                {{-- Outline Decorativo --}}
                 <div class="absolute -z-10 top-6 -right-6 w-full h-full border border-brand-secondary/10"></div>
             </div>
 
-            {{-- Texto Bio (Refatorado para voz da Empresa) --}}
             <div class="lg:col-span-7 space-y-12 pl-0 lg:pl-12">
                 <div data-aos="fade-up">
                     <h3 class="text-xs font-bold uppercase tracking-widest text-brand-primary mb-6 flex items-center gap-3">
@@ -85,7 +79,6 @@
                     </h2>
                     
                     <div class="prose prose-lg text-gray-500 font-light leading-relaxed space-y-6 text-justify">
-                        {{-- Alteração: Texto focado na fundação e não apenas no "Eu" --}}
                         <p>
                             {{ __('Fundada por') }} <strong>Rui Moita</strong>, {{ __('a Intellectus nasce de uma carreira sólida na gestão de ativos, onde a premissa sempre foi clara: os números contam histórias. Essa bagagem analítica permite à nossa equipa olhar para um imóvel não apenas como "espaço", mas como um') }} <strong>{{ __('ativo financeiro vivo') }}</strong>.
                         </p>
@@ -98,7 +91,6 @@
                     </div>
                 </div>
 
-                {{-- Assinatura --}}
                 <div data-aos="fade-up" data-aos-delay="200" class="border-t border-gray-100 pt-8">
                     <p class="font-serif italic text-3xl text-brand-secondary">Rui Moita</p>
                     <p class="text-xs text-brand-primary uppercase tracking-widest mt-2">{{ __('Fundador & Senior Partner') }}</p>
