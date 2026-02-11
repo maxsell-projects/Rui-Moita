@@ -10,9 +10,8 @@
     <div class="container mx-auto px-6">
         <div class="flex items-center justify-between">
             
-            {{-- 1. LOGO (Tamanho Reduzido) --}}
+            {{-- 1. LOGO --}}
             <a href="{{ route('home') }}" class="relative z-50 group block" @click="mobileMenuOpen = false">
-                {{-- Reduzi as classes de altura: h-8 (mobile) até h-12 (desktop) --}}
                 <img src="{{ asset('img/Ativo_8.png') }}" 
                      alt="Intellectus | Rui Moita Private Office" 
                      class="h-8 sm:h-9 md:h-10 lg:h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
@@ -70,7 +69,7 @@
                     <span class="absolute -bottom-2 left-0 w-0 h-[1px] bg-intellectus-accent group-hover:w-full transition-all duration-300"></span>
                 </a>
 
-                {{-- LOGIN / DASHBOARD (Integrado) --}}
+                {{-- LOGIN / DASHBOARD --}}
                 @auth
                     <a href="{{ route('dashboard') }}" class="text-[10px] font-bold uppercase tracking-[0.2em] text-intellectus-accent hover:text-white transition-colors relative group border border-intellectus-accent/30 px-3 py-1 rounded-sm hover:bg-intellectus-accent hover:border-transparent">
                         {{ __('Minha Conta') }}
@@ -82,7 +81,7 @@
                     </a>
                 @endauth
                 
-                {{-- SELETOR DE IDIOMA (DESKTOP) --}}
+                {{-- IDIOMA DESKTOP --}}
                 <div class="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-white ml-2 border-l border-white/20 pl-4 h-6">
                     <a href="{{ route('lang.switch', 'pt') }}" class="{{ app()->getLocale() == 'pt' ? 'text-intellectus-accent cursor-default' : 'hover:text-intellectus-accent transition-colors opacity-50 hover:opacity-100' }}">PT</a>
                     <a href="{{ route('lang.switch', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'text-intellectus-accent cursor-default' : 'hover:text-intellectus-accent transition-colors opacity-50 hover:opacity-100' }}">EN</a>
@@ -118,42 +117,52 @@
          x-transition:leave="transition ease-in duration-300"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 translate-y-full"
-         class="fixed inset-0 bg-intellectus-base z-40 flex flex-col justify-center overflow-y-auto">
+         class="fixed inset-0 bg-intellectus-base z-40 overflow-y-auto">
         
-        <div class="container mx-auto px-6 relative z-10 py-12">
-            <nav class="flex flex-col items-center space-y-6 text-center">
-                <a href="{{ route('home') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white hover:text-intellectus-accent transition-colors">{{ __('Início') }}</a>
-                <a href="{{ route('portfolio') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white hover:text-intellectus-accent transition-colors">{{ __('Coleção Privada') }}</a>
+        {{-- CONTAINER FLEXÍVEL --}}
+        {{-- min-h-screen garante altura total; justify-between empurra o footer; pt-32 protege a área do logo --}}
+        <div class="min-h-screen flex flex-col px-6 pt-32 pb-8">
+            
+            {{-- ÁREA DE NAVEGAÇÃO (Cresce para ocupar espaço) --}}
+            <nav class="flex-grow flex flex-col items-center justify-center space-y-4 text-center">
+                
+                {{-- Links Principais (Texto ajustável: 2xl em mobile, 3xl em tablets) --}}
+                <a href="{{ route('home') }}" @click="mobileMenuOpen = false" class="text-2xl sm:text-3xl font-serif text-white hover:text-intellectus-accent transition-colors">{{ __('Início') }}</a>
+                <a href="{{ route('portfolio') }}" @click="mobileMenuOpen = false" class="text-2xl sm:text-3xl font-serif text-white hover:text-intellectus-accent transition-colors">{{ __('Coleção Privada') }}</a>
+                <a href="{{ route('team') }}" @click="mobileMenuOpen = false" class="text-2xl sm:text-3xl font-serif text-white hover:text-intellectus-accent transition-colors">{{ __('Equipa') }}</a>
+                <a href="{{ route('about') }}" @click="mobileMenuOpen = false" class="text-2xl sm:text-3xl font-serif text-white hover:text-intellectus-accent transition-colors">{{ __('A Visão') }}</a>
                 
                 @auth
-                    <a href="{{ route('dashboard') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-intellectus-accent hover:text-white transition-colors">{{ __('Minha Conta') }}</a>
+                    <a href="{{ route('dashboard') }}" @click="mobileMenuOpen = false" class="text-2xl sm:text-3xl font-serif text-intellectus-accent hover:text-white transition-colors">{{ __('Minha Conta') }}</a>
                 @else
-                    <a href="{{ route('login') }}" @click="mobileMenuOpen = false" class="text-3xl font-serif text-white/70 hover:text-white transition-colors">{{ __('Login') }}</a>
+                    <a href="{{ route('login') }}" @click="mobileMenuOpen = false" class="text-2xl sm:text-3xl font-serif text-white/70 hover:text-white transition-colors">{{ __('Login') }}</a>
                 @endauth
 
-                <div class="w-12 h-[1px] bg-white/10 my-4"></div>
+                <div class="w-10 h-[1px] bg-white/10 my-3"></div>
                 
-                <p class="text-[10px] uppercase tracking-widest text-intellectus-accent mb-2">{{ __('Ferramentas') }}</p>
-                <a href="{{ route('tools.credit') }}" @click="mobileMenuOpen = false" class="text-lg font-light text-white/70 hover:text-white transition-colors">{{ __('Simulador Crédito') }}</a>
-                <a href="{{ route('tools.imt') }}" @click="mobileMenuOpen = false" class="text-lg font-light text-white/70 hover:text-white transition-colors">{{ __('Simulador IMT') }}</a>
-                <a href="{{ route('tools.gains') }}" @click="mobileMenuOpen = false" class="text-lg font-light text-white/70 hover:text-white transition-colors">{{ __('Mais-Valias (IRS)') }}</a>
+                {{-- Ferramentas --}}
+                <p class="text-[9px] uppercase tracking-widest text-intellectus-accent mb-1">{{ __('Ferramentas') }}</p>
+                <a href="{{ route('tools.credit') }}" @click="mobileMenuOpen = false" class="text-base font-light text-white/70 hover:text-white transition-colors">{{ __('Simulador Crédito') }}</a>
+                <a href="{{ route('tools.imt') }}" @click="mobileMenuOpen = false" class="text-base font-light text-white/70 hover:text-white transition-colors">{{ __('Simulador IMT') }}</a>
+                <a href="{{ route('tools.gains') }}" @click="mobileMenuOpen = false" class="text-base font-light text-white/70 hover:text-white transition-colors">{{ __('Mais-Valias (IRS)') }}</a>
 
-                <div class="w-12 h-[1px] bg-white/10 my-4"></div>
+                <div class="w-10 h-[1px] bg-white/10 my-3"></div>
 
-                {{-- SELETOR DE IDIOMA (MOBILE) --}}
-                <div class="flex items-center gap-6 mb-6">
+                {{-- Idiomas --}}
+                <div class="flex items-center gap-6 mb-4">
                     <a href="{{ route('lang.switch', 'pt') }}" class="text-lg font-serif {{ app()->getLocale() == 'pt' ? 'text-intellectus-accent underline decoration-1 underline-offset-4' : 'text-white/50' }}">PT</a>
                     <a href="{{ route('lang.switch', 'en') }}" class="text-lg font-serif {{ app()->getLocale() == 'en' ? 'text-intellectus-accent underline decoration-1 underline-offset-4' : 'text-white/50' }}">EN</a>
                 </div>
 
-                <a href="{{ route('contact') }}" @click="mobileMenuOpen = false" class="px-10 py-4 bg-intellectus-accent text-intellectus-base uppercase text-xs font-bold tracking-widest hover:bg-white transition-colors shadow-xl">
+                <a href="{{ route('contact') }}" @click="mobileMenuOpen = false" class="px-8 py-3 bg-intellectus-accent text-intellectus-base uppercase text-[10px] font-bold tracking-widest hover:bg-white transition-colors shadow-xl">
                     {{ __('Agendar Reunião') }}
                 </a>
             </nav>
-        </div>
 
-        <div class="absolute bottom-8 w-full text-center">
-            <p class="text-[9px] text-white/20 uppercase tracking-widest">Rui Moita Private Office &copy; {{ date('Y') }}</p>
+            {{-- FOOTER (Agora dentro do fluxo, no fundo do contentor) --}}
+            <div class="text-center mt-8 shrink-0">
+                <p class="text-[9px] text-white/20 uppercase tracking-widest">Rui Moita Private Office &copy; {{ date('Y') }}</p>
+            </div>
         </div>
     </div>
-</header>   
+</header>
