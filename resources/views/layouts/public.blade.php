@@ -17,8 +17,8 @@
     <meta property="og:image" content="{{ asset('images/hero-luxury.jpg') }}">
 
     {{-- FAVICON --}}
-    <link rel="icon" href="{{ asset('images/hero.png') }}" type="image/png">
-    <link rel="apple-touch-icon" href="{{ asset('images/hero.png') }}">
+    <link rel="icon" href="{{ asset('img/icon.png') }}" type="image/png">
+    <link rel="apple-touch-icon" href="{{ asset('img/icon.png') }}">
 
     {{-- FONTS (Inter + Playfair Display) --}}
     <link rel="preconnect" href="https://fonts.bunny.net">

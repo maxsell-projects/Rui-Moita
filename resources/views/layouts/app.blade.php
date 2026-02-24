@@ -9,7 +9,7 @@
     <meta name="description" content="@yield('meta_description', __('Consultoria imobiliária independente especializada em ativos de investimento e propriedades de luxo.'))">
     
     {{-- FAVICON --}}
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" href="{{ asset('img/icon.png') }}">
 
     {{-- ASSETS (Vite) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])

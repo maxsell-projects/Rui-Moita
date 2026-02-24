@@ -8,7 +8,7 @@
     <title>Private Office | Intellectus</title>
 
     {{-- FAVICON --}}
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" href="{{ asset('img/icon.png') }}">
 
     {{-- ASSETS (Vite) --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
