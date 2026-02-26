@@ -15,7 +15,7 @@
 
         {{-- Imagem de Fundo --}}
         <div class="absolute inset-0 z-0 opacity-20 mix-blend-overlay">
-             <img src="{{ asset('img/porto_dark.webp') }}" fetchpriority="high" alt="" class="w-full h-full object-cover">
+             <img src="{{ asset('img/porto_dark_v2.webp') }}" fetchpriority="high" alt="" class="w-full h-full object-cover">
         </div>
 
         <div class="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 h-full items-center">
@@ -93,7 +93,7 @@
         <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="relative order-2 lg:order-1" data-aos="fade-right">
                 <div class="aspect-[3/4] bg-gray-800 relative overflow-hidden border border-white/10 group">
-                    <img src="{{ asset('img/1.webp') }}" loading="lazy" width="700" height="933" alt="{{ __('Rui Moita') }}" class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-1000 opacity-90 hover:opacity-100">
+                    <img src="{{ asset('img/1_v2.webp') }}" loading="lazy" width="700" height="933" alt="{{ __('Rui Moita') }}" class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-1000 opacity-90 hover:opacity-100">
                 </div>
                 <div class="absolute -bottom-6 -right-6 bg-intellectus-accent text-intellectus-base p-6 w-56 shadow-2xl">
                     <p class="font-serif italic text-lg leading-tight">"{{ __('Onde há patrimônio, deve haver método.') }}"</p>

@@ -12,10 +12,10 @@
             
             {{-- 1. LOGO --}}
             <a href="{{ route('home') }}" class="relative z-50 group block" @click="mobileMenuOpen = false">
-                <img src="{{ asset('img/Ativo_8_resized.png') }}" 
+                <img src="{{ asset('img/Ativo_8_v2.png') }}" 
                      alt="Intellectus | Rui Moita Private Office" 
                      width="298" height="56"
-                     class="h-8 sm:h-9 md:h-10 lg:h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
+                     class="aspect-[298/56] h-8 sm:h-9 md:h-10 lg:h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
             </a>
 
             {{-- 2. DESKTOP MENU --}}

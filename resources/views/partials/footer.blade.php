@@ -9,7 +9,7 @@
             {{-- BRANDING & SOCIAL --}}
             <div>
                 <div class="mb-4">
-                    <img src="{{ asset('img/Ativo_8_resized.png') }}" alt="Logo" width="298" height="56" loading="lazy" class="h-auto w-48 max-w-full">
+                    <img src="{{ asset('img/Ativo_8_v2.png') }}" alt="Logo" width="298" height="56" loading="lazy" class="aspect-[298/56] h-auto w-48 max-w-full">
                 </div>
                 <p class="text-white/70 text-sm leading-relaxed mb-4 font-light">
                     {{ __('Consultoria imobiliária independente especializada em ativos de investimento e propriedades de luxo.') }}

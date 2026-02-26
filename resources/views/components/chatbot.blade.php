@@ -19,7 +19,7 @@
 
 <div x-data="chatbot()" x-init="initBot()" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
     
-    <div x-show="open" 
+    <div x-show="open" x-cloak
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 translate-y-4 scale-95"
          x-transition:enter-end="opacity-100 translate-y-0 scale-100"
