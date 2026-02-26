@@ -15,7 +15,7 @@
 
         {{-- Imagem de Fundo --}}
         <div class="absolute inset-0 z-0 opacity-20 mix-blend-overlay">
-             <img src="{{ asset('img/porto_dark.jpeg') }}" alt="Background" class="w-full h-full object-cover">
+             <img src="{{ asset('img/porto_dark.webp') }}" fetchpriority="high" alt="" class="w-full h-full object-cover">
         </div>
 
         <div class="container mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 h-full items-center">
@@ -93,7 +93,7 @@
         <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="relative order-2 lg:order-1" data-aos="fade-right">
                 <div class="aspect-[3/4] bg-gray-800 relative overflow-hidden border border-white/10 group">
-                    <img src="{{ asset('img/1.jpeg') }}" alt="{{ __('Rui Moita') }}" class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-1000 opacity-90 hover:opacity-100">
+                    <img src="{{ asset('img/1.webp') }}" loading="lazy" width="700" height="933" alt="{{ __('Rui Moita') }}" class="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-1000 opacity-90 hover:opacity-100">
                 </div>
                 <div class="absolute -bottom-6 -right-6 bg-intellectus-accent text-intellectus-base p-6 w-56 shadow-2xl">
                     <p class="font-serif italic text-lg leading-tight">"{{ __('Onde há patrimônio, deve haver método.') }}"</p>
@@ -169,6 +169,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2">
             <div class="relative h-96 lg:h-auto min-h-[400px] overflow-hidden group">
                 <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop" 
+                     loading="lazy" width="1049" height="700"
                      class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" alt="Recruitment">
                 <div class="absolute inset-0 bg-gradient-to-r from-intellectus-base/90 to-transparent"></div>
             </div>
@@ -254,28 +255,28 @@
                         <input type="hidden" name="message" id="hidden_message">
 
                         <div class="col-span-2 md:col-span-1 group">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Nome Completo *') }}</label>
-                            <input type="text" name="name" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="{{ __('Seu nome') }}">
+                            <label for="name" class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Nome Completo *') }}</label>
+                            <input type="text" id="name" name="name" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="{{ __('Seu nome') }}">
                         </div>
 
                         <div class="col-span-2 md:col-span-1 group">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Email Corporativo/Pessoal *') }}</label>
-                            <input type="email" name="email" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="email@exemplo.com">
+                            <label for="email" class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Email Corporativo/Pessoal *') }}</label>
+                            <input type="email" id="email" name="email" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="email@exemplo.com">
                         </div>
 
                         {{-- TELEFONE (Visual apenas, vai para message via JS) --}}
                         <div class="col-span-2 md:col-span-1 group">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Telefone *') }}</label>
-                            <input type="tel" x-model="phone" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="+351 ...">
+                            <label for="phone" class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Telefone *') }}</label>
+                            <input type="tel" id="phone" x-model="phone" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="+351 ...">
                         </div>
 
                         <div class="col-span-2 md:col-span-1 group">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Localização de Interesse *') }}</label>
-                            <input type="text" name="country" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="{{ __('Ex: Cascais, Estoril...') }}">
+                            <label for="country" class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2 group-focus-within:text-intellectus-primary transition-colors">{{ __('Localização de Interesse *') }}</label>
+                            <input type="text" id="country" name="country" required class="w-full border-b border-gray-200 py-3 text-gray-800 focus:outline-none focus:border-intellectus-accent transition-colors bg-transparent placeholder-gray-300 font-serif" placeholder="{{ __('Ex: Cascais, Estoril...') }}">
                         </div>
 
                         <div class="col-span-2">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-4">{{ __('Perfil de Investidor *') }}</label>
+                            <label class="block text-[10px] uppercase tracking-widest text-gray-500 mb-4">{{ __('Perfil de Investidor *') }}</label>
                             <div class="flex flex-wrap gap-4">
                                 <label class="cursor-pointer">
                                     {{-- Value ajustado para 'client' conforme validação do backend --}}
@@ -290,8 +291,8 @@
                         </div>
 
                         <div class="col-span-2 md:col-span-1 group">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">{{ __('Investimento Previsto') }}</label>
-                            <select name="investment_amount" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
+                            <label for="investment_amount" class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">{{ __('Investimento Previsto') }}</label>
+                            <select id="investment_amount" name="investment_amount" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
                                 <option value="">{{ __('Selecione...') }}</option>
                                 <option value="< 500k">Até 500k€</option>
                                 <option value="500k - 1M">500k€ - 1M€</option>
@@ -302,8 +303,8 @@
 
                         {{-- PRAZO (Visual apenas, vai para message via JS) --}}
                         <div class="col-span-2 md:col-span-1 group">
-                            <label class="block text-[10px] uppercase tracking-widest text-gray-400 mb-2">{{ __('Prazo') }}</label>
-                            <select x-model="timeline" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
+                            <label for="timeline_select" class="block text-[10px] uppercase tracking-widest text-gray-500 mb-2">{{ __('Prazo') }}</label>
+                            <select id="timeline_select" x-model="timeline" class="w-full border-b border-gray-200 py-3 text-gray-800 bg-transparent focus:outline-none focus:border-intellectus-accent font-serif">
                                 <option value="">{{ __('Selecione...') }}</option>
                                 <option value="Imediato">{{ __('Imediato') }}</option>
                                 <option value="Até 3 meses">{{ __('Até 3 meses') }}</option>
@@ -315,7 +316,7 @@
                             <label class="flex items-start gap-3 cursor-pointer">
                                 {{-- Name ajustado para 'consent' conforme validação do backend --}}
                                 <input type="checkbox" name="consent" required class="mt-1 text-intellectus-accent border-gray-300 rounded focus:ring-intellectus-accent">
-                                <span class="text-xs text-gray-400 leading-relaxed">
+                                <span class="text-xs text-gray-500 leading-relaxed">
                                     {{ __('Li e aceito a') }} <a href="{{ route('terms') }}" class="underline hover:text-intellectus-primary">{{ __('Política de Privacidade') }}</a>. 
                                     {{ __('Autorizo o tratamento dos meus dados para efeitos de resposta a este pedido de análise.') }}
                                 </span>

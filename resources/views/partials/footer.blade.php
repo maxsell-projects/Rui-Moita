@@ -9,7 +9,7 @@
             {{-- BRANDING & SOCIAL --}}
             <div>
                 <div class="mb-4">
-                    <img src="{{ asset('img/Ativo_8.png') }}" alt="Logo" class="h-auto w-48 max-w-full">
+                    <img src="{{ asset('img/Ativo_8_resized.png') }}" alt="Logo" width="298" height="56" loading="lazy" class="h-auto w-48 max-w-full">
                 </div>
                 <p class="text-white/70 text-sm leading-relaxed mb-4 font-light">
                     {{ __('Consultoria imobiliária independente especializada em ativos de investimento e propriedades de luxo.') }}
@@ -79,7 +79,7 @@
                         <div class="text-white/60 text-sm font-light">
                             <span class="block text-white font-bold text-xs uppercase tracking-wider mb-1">{{ __('Horário de Atendimento') }}</span>
                             <span class="block">{{ __('Mon - Fri') }}: 09:00 - 18:00</span>
-                            <span class="block italic text-white/40">{{ __('Weekends') }}: {{ __('By appointment') }}</span>
+                            <span class="block italic text-white/60">{{ __('Weekends') }}: {{ __('By appointment') }}</span>
                         </div>
                     </li>
                 </ul>
@@ -89,16 +89,16 @@
         {{-- COPYRIGHT & TECHNOLOGY --}}
         <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             
-            <p class="text-white/40 text-[11px] uppercase tracking-widest text-center md:text-left font-light">
+            <p class="text-white/60 text-[11px] uppercase tracking-widest text-center md:text-left font-light">
                 © {{ date('Y') }} Intellectus Private Office. {{ __('Todos os direitos reservados.') }}
             </p>
 
-            <div class="flex items-center gap-4 opacity-30 hover:opacity-100 transition-all duration-700 group cursor-pointer">
-                <span class="text-[9px] text-white/50 uppercase tracking-[0.3em] group-hover:text-intellectus-accent transition-colors hidden md:block">
+            <div class="flex items-center gap-4 opacity-50 hover:opacity-100 transition-all duration-700 group cursor-pointer">
+                <span class="text-[9px] text-white/70 uppercase tracking-[0.3em] group-hover:text-intellectus-accent transition-colors hidden md:block">
                     {{ __('Desenvolvido por') }}
                 </span>
-                <img src="{{ asset('img/maxsell.png') }}" 
-                     alt="MaxSell" 
+                <img src="{{ asset('img/maxsell_resized.png') }}" 
+                     alt="MaxSell" loading="lazy" width="200" height="40"
                      class="h-5 w-auto grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700">
             </div>
 

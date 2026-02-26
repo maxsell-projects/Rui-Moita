@@ -12,8 +12,9 @@
             
             {{-- 1. LOGO --}}
             <a href="{{ route('home') }}" class="relative z-50 group block" @click="mobileMenuOpen = false">
-                <img src="{{ asset('img/Ativo_8.png') }}" 
+                <img src="{{ asset('img/Ativo_8_resized.png') }}" 
                      alt="Intellectus | Rui Moita Private Office" 
+                     width="298" height="56"
                      class="h-8 sm:h-9 md:h-10 lg:h-12 w-auto object-contain transition-transform duration-500 group-hover:scale-105">
             </a>
 
@@ -94,11 +95,11 @@
             </nav>
 
             {{-- 3. MOBILE MENU BUTTON --}}
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden text-intellectus-accent z-50 focus:outline-none p-2">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Toggle Mobile Menu" class="lg:hidden text-intellectus-accent z-50 focus:outline-none p-2">
                 <div class="w-6 flex items-center justify-center relative">
-                    <span x-show="!mobileMenuOpen" class="transform transition w-full h-px bg-current absolute -translate-y-2"></span>
-                    <span x-show="!mobileMenuOpen" class="transform transition w-full h-px bg-current absolute translate-y-2"></span>
-                    <span x-show="!mobileMenuOpen" class="transform transition w-full h-px bg-current absolute"></span>
+                    <span x-show="!mobileMenuOpen" x-cloak class="transform transition w-full h-px bg-current absolute -translate-y-2"></span>
+                    <span x-show="!mobileMenuOpen" x-cloak class="transform transition w-full h-px bg-current absolute translate-y-2"></span>
+                    <span x-show="!mobileMenuOpen" x-cloak class="transform transition w-full h-px bg-current absolute"></span>
                     
                     <svg x-show="mobileMenuOpen" x-cloak class="w-6 h-6 transform transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />

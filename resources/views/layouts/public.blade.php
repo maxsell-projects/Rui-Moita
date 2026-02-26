@@ -20,9 +20,12 @@
     <link rel="icon" href="{{ asset('img/icon.png') }}" type="image/png">
     <link rel="apple-touch-icon" href="{{ asset('img/icon.png') }}">
 
-    {{-- FONTS (Inter + Playfair Display) --}}
+    {{-- FONTS (Inter + Playfair Display) - Render-blocking fix --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"></noscript>
 
     {{-- SCRIPTS --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
